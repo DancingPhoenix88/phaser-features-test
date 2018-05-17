@@ -137,3 +137,10 @@ If you can form a square (or a rectangle), all dots with that color will disappe
   + Edit index.html to un-comment the <script> of cordova.js.
   + Edit config.xml and AndroidManifest.xml as guided on Version 2.
   + Build and run (not tested on iDevice yet)
+  
+## What's coming next ?
++ UI
++ Bitmap Font
++ Local Storage
++ Weighted random
++ More fun in game elements
