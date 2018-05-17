@@ -79,3 +79,38 @@ If you can form a square (or a rectangle), all dots with that color will disappe
     + cordova build android
     + cordova run android
   + To emphasize connection between dots, I add white line sprites in a group under dots (fixed position as usual), then tint and show them later.
+  + Add some debug plugins:
+    + Advanced Timing (https://github.com/samme/phaser-plugin-advanced-timing) to show FPS on screen
+    + Scene Graph (https://github.com/samme/phaser-plugin-scene-graph) to show scene graph in console
+    + View Cache (https://github.com/samme/phaser-view-cache) to show cache content in console
+    + Step (https://github.com/samme/phaser-plugin-step) to pause the game and move frame by frame using keyboard shortcut
+    + Advanced Debug (https://github.com/orange-games/phaser-advanced-debug) to show performance and WebGL draw calls
+    + Inspector (https://github.com/netcell/phaser-inspector) to show scene graph in DOM (heavy) -> need a way to disable plugin quickly (next)
+  + I add a function `addOptionalPlugin` to add plugin safely when it can be null. By this way, you can just comment out <script> tag of that plugins in index.html to disable that plugin.
+  + **Atlas**: Invidual sprites are moved to Design folder, which is excluded from final build. Sprites are packed by Phaser Editor to generate a sprite atlas -> less request, less memory, less batches. Awesome!
+
+
+## Version 2
++ **Canvas/State**
+  + In order to make a re-usable template, I follow guides from Orange Games (https://github.com/orange-games/phaser-ts-boilerplate)
+  + So we have 4 states:
+    + Boot: Init the game, load 'progress bar' sprite for next state.
+    + Preload: Load everything including plugins, auto transit to next state when loading is done. Phaser Editor supports this state quite well.
+    + Menu: Show a button to start the game.
+    + Battle: The main state, which doesn't need to load tons of thing like version 1 anymore. Add a button to go back to Menu.
+  + Use plugin State Transition (https://github.com/cristianbote/phaser-state-transition) to transit between states
+    + But it doesn't work with my Phaser version.
+    + So I need to find compatible version (it took long long time).
+    + Result: Not as smooth as expected, but acceptable.
+  + Use `RecyclePool` to recycle objects like dots.
+  + Refactor all collections in Battle.js
+  + Try to re-use tweens but failed.
+  + Add game config in Main.js. Important changes:
+    + Switch renderer to AUTO for better performance on Android
+    + Disable debug for better performance. Though my game is stable with 60 FPS from the beginning, I still leave this option here for later reference.
+  + Found out plugin parameters are ignored by Phaser, so I need to get plugin to set parameters later -> `getPlugin` function is born.
+  + Edit .xml file for better experience on mobile:
+    + Add 'android:debuggable="true"' to <application> in AndroidManifest.xml for Remote Debugging
+    + Add '<preference name="Orientation" value="portrait" />' in config.xml to lock Portrait mode in Android
+    + Add <preference name="Fullscreen" value="true" /> in 'config.xml' and
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen" to <activity> in AndroidManifest.xml to make game fullscreen
