@@ -76,8 +76,8 @@ If you can form a square (or a rectangle), all dots with that color will disappe
     + PhoneGap desktop app (http://docs.phonegap.com/getting-started/1-install-phonegap/desktop/) is used to host a server on computer.
     + PhoneGap developer app (https://play.google.com/store/apps/details?id=com.adobe.phonegap.app&hl=vi) is used to load the game into a WebView, directly from your computer without compiling to .apk.
   + When I solved all the problems with NPM, Cordova, I can build and run the game on my phone by using 2 simple commands:
-    + cordova build android
-    + cordova run android
+    + `cordova build android`
+    + `cordova run android`
   + To emphasize connection between dots, I add white line sprites in a group under dots (fixed position as usual), then tint and show them later.
   + Add some debug plugins:
     + Advanced Timing (https://github.com/samme/phaser-plugin-advanced-timing) to show FPS on screen
@@ -131,3 +131,9 @@ If you can form a square (or a rectangle), all dots with that color will disappe
   + Background music is played everytime we enters Menu state
   + So when we go back ad forth between Menu and Battle states, the music is played by another source -> multiple sounds can be heard at the same time
   + FIX: Add `data` property in global variable `game` to control this.
++ **Add PhoneGap folder**
+  + Create a blank PhoneGap project
+  + Copy WebContent folder to that and rename to www. WebContent is needed by Phaser Editor so I don't know how to change its name properly. On the other side, www is needed by Cordova/PhoneGap.
+  + Edit index.html to un-comment the <script> of cordova.js.
+  + Edit config.xml and AndroidManifest.xml as guided on Version 2.
+  + Build and run (not tested on iDevice yet)

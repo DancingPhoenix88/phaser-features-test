@@ -1,0 +1,181 @@
+{
+  "canvas-version": 2,
+  "settings": {
+    "className": "Battle",
+    "sceneWidth": 450,
+    "sceneHeight": 800,
+    "generateOnSave": true,
+    "enableStepping": false,
+    "lang": "JAVA_SCRIPT",
+    "baseClass": "Phaser.State",
+    "backgroundColor": [
+      180,
+      180,
+      180
+    ],
+    "gridColor": [
+      200,
+      200,
+      200
+    ],
+    "showGrid": true,
+    "create_after": "\n//--Generated code from canvas user code\nthis.initStage(); ",
+    "state_preload_after": "//--Generated Spine load (from user canvas code)\nthis.load.spine( 'avatar', 'assets/animations/spineboy.json' );"
+  },
+  "stateSettings": {
+    "stageBackgroundColor": [
+      0,
+      0,
+      0
+    ],
+    "autoLoad": false,
+    "preloadSpriteId": "",
+    "preloadSprite_direction": 0,
+    "load.pack": []
+  },
+  "world": {
+    "type": "group",
+    "id": "9ab9ecfe-3f31-4017-a73d-3cbbd3ebeebb",
+    "info": {
+      "editorName": "Battle",
+      "setAll": [],
+      "children": [
+        {
+          "type": "image",
+          "id": "db78caa3-1500-4186-9ad0-77a11da9b736",
+          "asset": "0",
+          "info": {
+            "editorName": "bg",
+            "name": "bg"
+          }
+        },
+        {
+          "type": "atlas-sprite",
+          "id": "0b153a4e-584b-468e-b479-246e5dc79379",
+          "asset": "1",
+          "info": {
+            "editorName": "stage",
+            "editorPublic": true,
+            "name": "stage",
+            "x": 69,
+            "y": 244,
+            "alpha": 0.8
+          }
+        },
+        {
+          "type": "group",
+          "id": "f21b2e07-f07d-4106-88f5-010402676af4",
+          "info": {
+            "editorName": "linesGroup",
+            "editorPublic": true,
+            "name": "linesGroup",
+            "x": 79,
+            "y": 254,
+            "setAll": [],
+            "children": []
+          }
+        },
+        {
+          "type": "group",
+          "id": "567b7ced-76bd-4172-9ac1-afe382fc301f",
+          "info": {
+            "editorName": "dotsGroup",
+            "editorPublic": true,
+            "name": "dotsGroup",
+            "x": 79,
+            "y": 254,
+            "setAll": [],
+            "children": []
+          }
+        },
+        {
+          "type": "group",
+          "id": "895745a1-b0fb-448c-b320-4cbe1ff3b8e4",
+          "info": {
+            "editorName": "particlesGroup",
+            "editorPublic": true,
+            "name": "particlesGroup",
+            "x": 79,
+            "y": 254,
+            "setAll": [],
+            "children": []
+          }
+        },
+        {
+          "type": "button",
+          "id": "7f42b2f8-146f-492f-96b2-7688705d9068",
+          "asset": "2",
+          "info": {
+            "editorName": "btnBackBg",
+            "name": "btnBackBg",
+            "x": 360,
+            "y": 8,
+            "scale.x": 1.7,
+            "scale.y": 4,
+            "alpha": 0.9,
+            "fixedToCamera": true,
+            "callback": "this.toMenuState"
+          }
+        },
+        {
+          "type": "text",
+          "id": "8e796e35-6870-4018-97fe-681725239a88",
+          "info": {
+            "editorName": "btnBackText",
+            "name": "btnBackText",
+            "x": 376,
+            "y": 16,
+            "fixedToCamera": true,
+            "text": "BACK",
+            "style.fill": "#9e627c",
+            "style.align": "CENTER"
+          }
+        },
+        {
+          "type": "atlas-sprite",
+          "id": "fae1766c-1126-4baa-a42b-575da3a4c9df",
+          "asset": "3",
+          "info": {
+            "editorName": "squareIndicator",
+            "editorPublic": true,
+            "name": "squareIndicator",
+            "x": 210,
+            "y": 385,
+            "scale.x": 40,
+            "scale.y": 40,
+            "alpha": 0.2,
+            "anchor.x": 0.5,
+            "anchor.y": 0.5
+          }
+        }
+      ]
+    }
+  },
+  "type": "STATE",
+  "asset-table": {
+    "0": {
+      "file": "WebContent/assets/pack.json",
+      "section": "pack1",
+      "asset": "bg"
+    },
+    "1": {
+      "file": "WebContent/assets/pack.json",
+      "section": "pack1",
+      "asset": "all-images",
+      "sprite": "stage"
+    },
+    "2": {
+      "file": "WebContent/assets/pack.json",
+      "section": "pack1",
+      "asset": "all-images",
+      "sprite": "line"
+    },
+    "3": {
+      "file": "WebContent/assets/pack.json",
+      "section": "pack1",
+      "asset": "all-images",
+      "sprite": "dot"
+    }
+  },
+  "prefab-table": {}
+}

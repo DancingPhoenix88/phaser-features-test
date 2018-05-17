@@ -1,0 +1,52 @@
+{
+  "canvas-version": 2,
+  "settings": {
+    "className": "Boot",
+    "sceneWidth": 450,
+    "sceneHeight": 800,
+    "generateOnSave": true,
+    "enableStepping": false,
+    "lang": "JAVA_SCRIPT",
+    "baseClass": "Phaser.State",
+    "backgroundColor": [
+      180,
+      180,
+      180
+    ],
+    "gridColor": [
+      200,
+      200,
+      200
+    ],
+    "showGrid": true,
+    "create_before": "this.state.start( 'Preload' );",
+    "state_init_before": "//--Generated config (from canvas user code)\n// Support full-screen\nthis.input.maxPointers \t\t\t\t= 1;\nthis.stage.disableVisibilityChange \t= true;\nthis.scale.pageAlignHorizontally \t= true;\nthis.scale.pageAlignVertically \t\t= true;\n//this.scale.scaleMode \t\t\t\t= Phaser.ScaleManager.SHOW_ALL;",
+    "state_preload_before": "//--Generated config (from canvas user code)\n// load 'progress bar sprite' to show in Preload"
+  },
+  "stateSettings": {
+    "stageBackgroundColor": [
+      0,
+      0,
+      0
+    ],
+    "autoLoad": false,
+    "preloadSpriteId": "",
+    "preloadSprite_direction": 0,
+    "load.pack": [{
+      "file": "WebContent/assets/pack.json",
+      "section": "preload"
+    }]
+  },
+  "world": {
+    "type": "group",
+    "id": "b388b059-4267-42e1-8bf1-0a09e7ec830b",
+    "info": {
+      "editorName": "Boot",
+      "setAll": [],
+      "children": []
+    }
+  },
+  "type": "STATE",
+  "asset-table": {},
+  "prefab-table": {}
+}
