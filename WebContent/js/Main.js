@@ -1,6 +1,9 @@
 // add global variable for using in console: game.state.getCurrentState()
 /** @type Phaser.Game */var game; // = Phaser.GAMES[0]
 //-----------------------------------------------------------------------------------------------------------
+/**
+ * Game config (properties are defined by Phaser)
+ */
 var pConfig = {
     width       : 450,
     height      : 800,
@@ -10,20 +13,30 @@ var pConfig = {
     scaleMode   : Phaser.ScaleManager.SHOW_ALL
 };
 //-----------------------------------------------------------------------------------------------------------
+/**
+ * Entry point: Game starts here
+ */
 window.onload = function() {
-	game = new Phaser.Game( pConfig );
-	
-	// states
-	game.state.add( 'Boot',    Boot    );
-	game.state.add( 'Preload', Preload );
-	game.state.add( 'Menu',    Menu    );
-	game.state.add( 'Battle',  Battle  );
-	game.state.start( 'Boot' );
+    game = new Phaser.Game( pConfig );
+    
+    // states
+    game.state.add( 'Boot',    Boot    );
+    game.state.add( 'Preload', Preload );
+    game.state.add( 'Menu',    Menu    );
+    game.state.add( 'Battle',  Battle  );
+    game.state.start( 'Boot' );
+    
+    // user-defined data
+    game.data = {
+        bgm : ''
+    };
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
  * Shortcut to add plugin safely.
  * Disable this plugin = comment <script> tag in index.html
+ * NOTE: If game.config.enableDebug = false -> game.debug can't be used
+ * 
  * @param plugin
  * @param parameter
  * @returns Added plugin

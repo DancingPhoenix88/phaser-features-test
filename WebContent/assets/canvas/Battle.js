@@ -51,18 +51,23 @@ Battle.prototype.create = function () {
 	_particlesGroup.name = 'particlesGroup';
 	_particlesGroup.position.setTo(79.0, 254.0);
 	
-	var _btnBackBg = this.add.button(360.0, 8.0, 'all-images', this.toMenuState, this, null, 'line', null, null);
+	var _btnBack = this.add.group();
+	_btnBack.name = 'btnBack';
+	_btnBack.fixedToCamera = true;
+	
+	var _btnBackBg = this.add.button(360.0, 8.0, 'all-images', this.toMenuState, this, null, 'line', null, null, _btnBack);
 	_btnBackBg.name = 'btnBackBg';
 	_btnBackBg.scale.setTo(1.7, 4.0);
 	_btnBackBg.alpha = 0.9;
 	
-	var _btnBackText = this.add.text(376.0, 16.0, 'BACK', {"font":"bold 20px Arial","fill":"#9e627c","align":"center"});
+	var _btnBackText = this.add.text(376.0, 16.0, 'BACK', {"font":"bold 20px Arial","fill":"#9e627c","align":"center"}, _btnBack);
 	_btnBackText.name = 'btnBackText';
 	
-	var _squareIndicator = this.add.sprite(-214.0, -35.0, 'all-images', 'stage');
+	var _squareIndicator = this.add.sprite(210.0, 385.0, 'all-images', 'dot');
 	_squareIndicator.name = 'squareIndicator';
-	_squareIndicator.scale.setTo(3.0, 3.0);
+	_squareIndicator.scale.setTo(40.0, 40.0);
 	_squareIndicator.alpha = 0.2;
+	_squareIndicator.anchor.setTo(0.5, 0.5);
 	
 	
 	
@@ -75,7 +80,7 @@ Battle.prototype.create = function () {
 	this.fSquareIndicator = _squareIndicator;
 	
 	//--Generated code from canvas user code
-	this.initStage(); 
+	this.initStage();
 	
 };
 
@@ -89,6 +94,7 @@ Battle.prototype.DOT_SIZE               = 32;   // px;
 Battle.prototype.DOT_SPACE              = 20;   // px
 Battle.prototype.FALL_1_FLOOR_DURATION  = 150;  // ms
 Battle.prototype.DOT_ANIM_DURATION      = 150;  // ms
+Battle.prototype.HIGHLIGHT_DURATION     = 400;  // ms
 Battle.prototype.LIVE_LINE_LENGTH       = 52;   // px
 Battle.prototype.EXPLODE_MAX_PARTICLES  = 5;
 Battle.prototype.EXPLODE_LIFE_SPAN      = 1600;
@@ -106,6 +112,7 @@ Battle.prototype.USE_EXPORTED_PARTICLE  = false; // TODO: didn't work yet
 Battle.prototype.SPINE_ENABLE           = true;
 Battle.prototype.LIVE_LINE_ENABLE       = true;
 Battle.prototype.USE_TWEEN_POOL         = false; // doesn't work yet, because giving tween back to pool needs callback
+Battle.prototype.FX_CONNECT_ENABLE      = true;
 //-----------------------------------------------------------------------------------------------------------
 // PROPERTIES
 Battle.prototype.poolOfDots             = null;
@@ -127,13 +134,12 @@ Battle.prototype.cachedStageY           = 0;
 Battle.prototype.cachedGroupX           = 0;
 Battle.prototype.cachedGroupY           = 0;
 Battle.prototype.poolOfTweens           = null;
+Battle.prototype.mapOfConnectFxs        = [];
 //-----------------------------------------------------------------------------------------------------------
 /**
  * Initialize everything
  */
 Battle.prototype.initStage = function () {
-    this.hideSquareIndicator();
-    
     // Cache unchanged numbers
     this.cachedStageX = this.fStage.x;
     this.cachedStageY = this.fStage.y;
@@ -147,6 +153,8 @@ Battle.prototype.initStage = function () {
     this.initAnimations();
     this.initAudio();
     this.initTweens();
+    this.initConnectFxs();
+    this.initSquareIndicator();
 
     // Init tableOfDots state as empty
     for (var i = 0; i < this.GRID_WIDTH; ++i) {
@@ -530,7 +538,7 @@ Battle.prototype.onTouch = function (col, row) {
         this.onConnectNewDot( index, lastDotIndex );
         console.log( "\t[SQUARE] Re-Add " + type + ": " + this.listOfConnectedDots );
         this.isSquareFormed = true;
-        this.showSquareIndicator( this.connectingType );
+        this.showSquareIndicator( col, row, this.connectingType );
     }
 };
 //-----------------------------------------------------------------------------------------------------------
@@ -544,6 +552,7 @@ Battle.prototype.matchDots = function () {
     if (this.isSquareFormed) {
         console.log( "Clear ALL dots type " + this.connectingType );
         this.clear( this.getDotsWhichIs( this.connectingType ) );
+        this.camera.shake( 0.01, this.DOT_ANIM_DURATION ); // UI is fixed with camera
         this.sfx( 'clear' );
     } else {
         console.log( "Clear matched dots type " + this.connectingType );
@@ -629,14 +638,18 @@ Battle.prototype.onConnectNewDot = function (newDotIndex, lastDotIndex) {
     /** @type Phaser.Sprite */ var dot = this.tableOfDots[c][r];
 
     // highlight dot
-    if (this.USE_TWEEN_POOL) {
-        this.stopTweensOf( dot.scale );
-        this.getTweenFor( dot.scale )
-            .to( { x : 1.2, y : 1.2 }, this.DOT_ANIM_DURATION, Phaser.Easing.Bounce.Out, true );
+    if (this.FX_CONNECT_ENABLE) {
+        this.showConnectFxAt( c, r );
     } else {
-        this.tweens.remove( dot.scale );
-        this.add.tween( dot.scale )
-            .to( { x : 1.2, y : 1.2 }, this.DOT_ANIM_DURATION, Phaser.Easing.Bounce.Out, true );
+        if (this.USE_TWEEN_POOL) {
+            this.stopTweensOf( dot.scale );
+            this.getTweenFor( dot.scale )
+                .to( { x : 1.2, y : 1.2 }, this.DOT_ANIM_DURATION, Phaser.Easing.Bounce.Out, true );
+        } else {
+            this.tweens.remove( dot.scale );
+            this.add.tween( dot.scale )
+                .to( { x : 1.2, y : 1.2 }, this.DOT_ANIM_DURATION, Phaser.Easing.Bounce.Out, true );
+        }
     }
     this.sfx( 'connect' );
 
@@ -668,14 +681,16 @@ Battle.prototype.onDisconnectDot = function (dotIndex, lastDotIndex) {
     /** @type Phaser.Sprite */ var dot = this.tableOfDots[c][r];
 
     // un-highlight dot
-    if (this.USE_TWEEN_POOL) {
-        this.stopTweensOf( dot.scale );
-        this.getTweenFor( dot.scale )
-            .to( { x : 1, y : 1 }, this.DOT_ANIM_DURATION, Phaser.Easing.Cubic.Out, true );
-    } else {
-        this.tweens.remove( dot.scale );
-        this.add.tween( dot.scale )
-            .to( { x : 1, y : 1 }, this.DOT_ANIM_DURATION, Phaser.Easing.Cubic.Out, true );
+    if (!this.FX_CONNECT_ENABLE) {
+        if (this.USE_TWEEN_POOL) {
+            this.stopTweensOf( dot.scale );
+            this.getTweenFor( dot.scale )
+                .to( { x : 1, y : 1 }, this.DOT_ANIM_DURATION, Phaser.Easing.Cubic.Out, true );
+        } else {
+            this.tweens.remove( dot.scale );
+            this.add.tween( dot.scale )
+                .to( { x : 1, y : 1 }, this.DOT_ANIM_DURATION, Phaser.Easing.Cubic.Out, true );
+        }
     }
     this.sfx( 'disconnect' );
 
@@ -698,12 +713,34 @@ Battle.prototype.onDisconnectDot = function (dotIndex, lastDotIndex) {
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
+ * 
+ */
+Battle.prototype.initSquareIndicator = function () {
+    this.hideSquareIndicator();
+    this.fSquareIndicator.scale.set( 0 );
+    /** @type Phaser.Tween */var tween = this.add.tween( this.fSquareIndicator.scale )
+        .to( { x : 40, y : 40 }, 200 ).loop().start();
+    tween.pause();
+    tween.onLoop.add( this._onSquareIndicatorLoop, this );
+    this.fSquareIndicator.data = { tween : tween };
+    
+    // TODO: Can't restart tween now -> Trick: Repeat tween infinitely, but pause after each loop, then resume later
+};
+//-----------------------------------------------------------------------------------------------------------
+/**
  * [GRAPHIC] VFX when a square is formed
+ * @param col
+ * @param row
  * @param type : Square color
  */
-Battle.prototype.showSquareIndicator = function (type) {
+Battle.prototype.showSquareIndicator = function (col, row, type) {
+    /** @type Phaser.Point */var p = this.tableOfDots[col][row].worldPosition;
+    this.fSquareIndicator.position.setTo( p.x, p.y );
     this.fSquareIndicator.tint          = this.COLORS[ type - 1 ];
     this.fSquareIndicator.visible       = true;
+    if (this.fSquareIndicator.data.tween.isPaused) {
+        this.fSquareIndicator.data.tween.resume();
+    }
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
@@ -711,6 +748,15 @@ Battle.prototype.showSquareIndicator = function (type) {
  */
 Battle.prototype.hideSquareIndicator = function () {
     this.fSquareIndicator.visible       = false;
+};
+//-----------------------------------------------------------------------------------------------------------
+/**
+ * [GRAPHIC]
+ * @param target : tween target (passed by Phaser.Tween.onLoop)
+ * @param tween : tween (passed by Phaser.Tween.onLoop)
+ */
+Battle.prototype._onSquareIndicatorLoop = function (target, tween) {
+    tween.pause();
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
@@ -745,7 +791,7 @@ Battle.prototype.initParticles = function () {
                 emitter.setYSpeed( -200, 200 );
                 this.mapOfExplodeFxs[ this.colRowToIndex(i, k) ] = emitter;
 
-                emitter.name = 'fx_' + this.colRowToIndex(i, k); // to view in Phaser.Plugin.Debug.SceneTree
+                emitter.name = 'fx_explode_' + this.colRowToIndex(i, k); // to view in Phaser.Plugin.Debug.SceneTree
             }
         }
     }
@@ -872,6 +918,67 @@ Battle.prototype.stopTweensOf = function (obj, complete) {
             allTweens[i].stop( complete );
         }
     }
+};
+//-----------------------------------------------------------------------------------------------------------
+/**
+ * [CONNECT FX] Create fx, set fixed position and hide all of them
+ */
+Battle.prototype.initConnectFxs = function () {
+    if (!this.FX_CONNECT_ENABLE) { return; }
+    
+    var particlesGroup = this.fParticlesGroup;
+    for (var i = 0; i < this.GRID_WIDTH; ++i) {
+        for (var k = 0; k < this.GRID_HEIGHT; ++k) {
+            var id = this.colRowToIndex(i, k);
+            // Create sprite
+            /** @type Phaser.Sprite */var fx = this.add.sprite( 0, 0, 'all-images', 'dot', particlesGroup );
+            fx.position.set( this.colToX(i), this.rowToY(k) );
+            fx.anchor.set( 0.5 );
+            fx.visible = false;
+            fx.name = 'fx_connect_' + id;
+            
+            // Create tweens (NOT auto-start)
+            /** @type Phaser.Tween */var tweenScale = this.add.tween( fx.scale )
+                .to( { x : 3, y : 3 }, this.HIGHLIGHT_DURATION, Phaser.Easing.Cubic.Out, true ).loop();
+            tweenScale.pause();
+            tweenScale.onLoop.add( this._hideConnectFx, this );
+            
+            /** @type Phaser.Tween */var tweenAlpha = this.add.tween( fx )
+                .to( { alpha : 0 }, this.HIGHLIGHT_DURATION, Phaser.Easing.Cubic.Out, true ).loop();
+            tweenAlpha.pause();
+            tweenAlpha.onLoop.add( this._hideConnectFx, this );
+            // don't use 'addOnce', because I want this callback to be executed everytime tween finishes
+            
+            this.mapOfConnectFxs[ id ] = {
+                sprite : fx,
+                tweens : [ tweenScale, tweenAlpha ]
+            };
+        }
+    }
+};
+//-----------------------------------------------------------------------------------------------------------
+/**
+ * [CONNECT FX] Show effect when connecting a new dot at a specific position
+ * @param c : column
+ * @param r : row
+ */
+Battle.prototype.showConnectFxAt = function (c, r) {
+    var fx = this.mapOfConnectFxs[ this.colRowToIndex(c, r) ];
+    fx.sprite.tint     = this.COLORS[ this.connectingType - 1 ];
+    fx.sprite.visible  = true;
+    
+    fx.tweens[0].resume();
+    fx.tweens[1].resume();
+};
+//-----------------------------------------------------------------------------------------------------------
+/**
+ * [CONNECT FX] Hide effect when it finished its tween (alpha = 0)
+ * @param target : tween target (passed by Phaser.Tween.onLoop)
+ * @param tween : tween (passed by Phaser.Tween.onLoop)
+ */
+Battle.prototype._hideConnectFx = function (target, tween) {
+    target.visible = false;
+    tween.pause();
 };
 //-----------------------------------------------------------------------------------------------------------
 Battle.prototype.isOnBoard = function (c, r) {

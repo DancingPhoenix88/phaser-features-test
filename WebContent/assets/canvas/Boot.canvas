@@ -19,9 +19,8 @@
       200
     ],
     "showGrid": true,
-    "create_before": "this.state.start( 'Preload' );",
-    "state_init_before": "//--Generated config (from canvas user code)\n// Support full-screen\nthis.input.maxPointers \t\t\t\t= 1;\nthis.stage.disableVisibilityChange \t= true;\nthis.scale.pageAlignHorizontally \t= true;\nthis.scale.pageAlignVertically \t\t= true;\n//this.scale.scaleMode \t\t\t\t= Phaser.ScaleManager.SHOW_ALL;",
-    "state_preload_before": "//--Generated config (from canvas user code)\n// load 'progress bar sprite' to show in Preload"
+    "create_before": "//--Generated config (from canvas user code)\nthis.state.start( 'Preload' );",
+    "state_init_before": "//--Generated config (from canvas user code)\n// Support full-screen\nthis.input.maxPointers \t\t\t\t= 1;\nthis.stage.disableVisibilityChange \t= true;\nthis.scale.pageAlignHorizontally \t= true;\nthis.scale.pageAlignVertically \t\t= true;\n//this.scale.scaleMode \t\t\t\t= Phaser.ScaleManager.SHOW_ALL;"
   },
   "stateSettings": {
     "stageBackgroundColor": [

@@ -79,3 +79,20 @@ If you can form a square (or a rectangle), all dots with that color will disappe
     + cordova build android
     + cordova run android
   + To emphasize connection between dots, I add white line sprites in a group under dots (fixed position as usual), then tint and show them later.
+
+
+## Version 3
++ **New/Updated effect**
+  + I spawn other sprites at fixed position on the grid, then animate them (alpha, scale) to highlight new connected dot. Now when my finger covers the dot, I can still know that it's connected.
+  + When I form a square, I will enable a big semi-transparent square with tinted color to notify player about his square. But it's not attractive enough. So I turn it to a circle and animate it (alpha, scale). I even place that effect at the newest connected dot to make it looks like his finger is doing some magical things.
+  + Last but not least, I add screen shake effect when a square clears all the dots with the same color. Yay
++ **"Reuse" tweens**
+  + New effects (not screen shake) are made by tween, and they're the same all the time (no new target, no new property value). So I need to re-use them instead of creating new tween many times.
+  + After trying some solutions online, I still can't find a way to do that, so I think of a trick.
+  + Make the tween loops forever.
+  + But I pause the tween everytime it starts a new loop using `onLoop.add` function.
+  + So everytime I want to "restart" the tween, I can just call `tween.resume`.
++ **Background music**
+  + Background music is played everytime we enters Menu state
+  + So when we go back ad forth between Menu and Battle states, the music is played by another source -> multiple sounds can be heard at the same time
+  + FIX: Add `data` property in global variable `game` to control this.

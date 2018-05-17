@@ -44,8 +44,11 @@ Menu.prototype.create = function () {
 	
 	
 	//--Generated code from canvas user code
-	// Play BGM (looped)
-	this.add.sound( 'bgm1', 0.5, true ).play();
+	// Play BGM (looped) and prevent playing multiple BGMs when switch to this state again
+	if (this.game.data.bgm == '') {
+		this.add.sound( 'bgm1', 0.5, true ).play();
+		this.game.data.bgm = 'bgm1';
+	}
 	
 	// Debug
 	var at = getPlugin( Phaser.Plugin.AdvancedTiming );
@@ -53,10 +56,6 @@ Menu.prototype.create = function () {
 		at.mode = 'graph';
 	}
 	
-	
-	if (!this.game.device.desktop) {
-	    console.log( StatusBar );
-	}
 };
 
 /* --- end generated code --- */

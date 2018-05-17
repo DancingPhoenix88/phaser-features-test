@@ -34,15 +34,13 @@ Boot.prototype.init = function () {
 
 Boot.prototype.preload = function () {
 	
-	//--Generated config (from canvas user code)
-	// load 'progress bar sprite' to show in Preload
-	
 	this.load.pack('preload', 'assets/pack.json');
 	
 };
 
 Boot.prototype.create = function () {
 	
+	//--Generated config (from canvas user code)
 	this.state.start( 'Preload' );
 	
 	

@@ -19,7 +19,7 @@
       200
     ],
     "showGrid": true,
-    "create_after": "\n//--Generated code from canvas user code\nthis.initStage(); ",
+    "create_after": "\n//--Generated code from canvas user code\nthis.initStage();",
     "state_preload_after": "//--Generated Spine load (from user canvas code)\nthis.load.spine( 'avatar', 'assets/animations/spineboy.json' );"
   },
   "stateSettings": {
@@ -102,46 +102,61 @@
           }
         },
         {
-          "type": "button",
-          "id": "7f42b2f8-146f-492f-96b2-7688705d9068",
-          "asset": "2",
+          "type": "group",
+          "id": "4fcecedf-3256-44d4-b45f-7c9d6761ac5f",
           "info": {
-            "editorName": "btnBackBg",
-            "name": "btnBackBg",
-            "x": 360,
-            "y": 8,
-            "scale.x": 1.7,
-            "scale.y": 4,
-            "alpha": 0.9,
-            "callback": "this.toMenuState"
-          }
-        },
-        {
-          "type": "text",
-          "id": "8e796e35-6870-4018-97fe-681725239a88",
-          "info": {
-            "editorName": "btnBackText",
-            "name": "btnBackText",
-            "x": 376,
-            "y": 16,
-            "text": "BACK",
-            "style.fill": "#9e627c",
-            "style.align": "CENTER"
+            "editorName": "btnBack",
+            "name": "btnBack",
+            "fixedToCamera": true,
+            "editorClosed": true,
+            "setAll": [],
+            "children": [
+              {
+                "type": "button",
+                "id": "7f42b2f8-146f-492f-96b2-7688705d9068",
+                "asset": "2",
+                "info": {
+                  "editorName": "btnBackBg",
+                  "name": "btnBackBg",
+                  "x": 360,
+                  "y": 8,
+                  "scale.x": 1.7,
+                  "scale.y": 4,
+                  "alpha": 0.9,
+                  "callback": "this.toMenuState"
+                }
+              },
+              {
+                "type": "text",
+                "id": "8e796e35-6870-4018-97fe-681725239a88",
+                "info": {
+                  "editorName": "btnBackText",
+                  "name": "btnBackText",
+                  "x": 376,
+                  "y": 16,
+                  "text": "BACK",
+                  "style.fill": "#9e627c",
+                  "style.align": "CENTER"
+                }
+              }
+            ]
           }
         },
         {
           "type": "atlas-sprite",
           "id": "fae1766c-1126-4baa-a42b-575da3a4c9df",
-          "asset": "1",
+          "asset": "3",
           "info": {
             "editorName": "squareIndicator",
             "editorPublic": true,
             "name": "squareIndicator",
-            "x": -214,
-            "y": -35,
-            "scale.x": 3,
-            "scale.y": 3,
-            "alpha": 0.2
+            "x": 210,
+            "y": 385,
+            "scale.x": 40,
+            "scale.y": 40,
+            "alpha": 0.2,
+            "anchor.x": 0.5,
+            "anchor.y": 0.5
           }
         }
       ]
@@ -165,6 +180,12 @@
       "section": "pack1",
       "asset": "all-images",
       "sprite": "line"
+    },
+    "3": {
+      "file": "WebContent/assets/pack.json",
+      "section": "pack1",
+      "asset": "all-images",
+      "sprite": "dot"
     }
   },
   "prefab-table": {}
