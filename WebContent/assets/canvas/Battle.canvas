@@ -19,24 +19,19 @@
       200
     ],
     "showGrid": true,
-    "create_after": "\n// Configured in canvas Configuration UI\nthis.initStage(); ",
-    "state_init_before": "// scale\nthis.game.scale.scaleMode               = Phaser.ScaleManager.SHOW_ALL;\nthis.game.scale.pageAlignHorizontally   = true;\nthis.game.scale.pageAlignVertically     = true;\nthis.game.stage.disableVisibilityChange = true;",
-    "state_init_after": "// Configured in canvas Configuration UI\naddOptionalPlugin( Phaser.Plugin.EPSY );\naddOptionalPlugin( PhaserSpine.SpinePlugin );\n//addOptionalPlugin( Phaser.Plugin.AdvancedTiming, { mode : 'graph' } ); // doesn't work with parameter\nvar at = addOptionalPlugin( Phaser.Plugin.AdvancedTiming );\nif (at) at.mode = 'graph';\n\nif (!this.game.device.desktop) { return; }\naddOptionalPlugin( Phaser.Plugin.SceneGraph );\naddOptionalPlugin( Phaser.Plugin.Step );\naddOptionalPlugin( Phaser.Plugin.Debug );\naddOptionalPlugin( Phaser.Plugin.Inspector );",
-    "state_preload_after": "// Configured in canvas Configuration UI\nthis.load.spine( 'avatar', 'assets/animations/spineboy.json' );"
+    "create_after": "\n//--Generated code from canvas user code\nthis.initStage(); ",
+    "state_preload_after": "//--Generated Spine load (from user canvas code)\nthis.load.spine( 'avatar', 'assets/animations/spineboy.json' );"
   },
   "stateSettings": {
     "stageBackgroundColor": [
-      249,
-      249,
-      249
+      0,
+      0,
+      0
     ],
     "autoLoad": false,
     "preloadSpriteId": "",
     "preloadSprite_direction": 0,
-    "load.pack": [{
-      "file": "WebContent/assets/pack.json",
-      "section": "pack1"
-    }]
+    "load.pack": []
   },
   "world": {
     "type": "group",
@@ -107,6 +102,34 @@
           }
         },
         {
+          "type": "button",
+          "id": "7f42b2f8-146f-492f-96b2-7688705d9068",
+          "asset": "2",
+          "info": {
+            "editorName": "btnBackBg",
+            "name": "btnBackBg",
+            "x": 360,
+            "y": 8,
+            "scale.x": 1.7,
+            "scale.y": 4,
+            "alpha": 0.9,
+            "callback": "this.toMenuState"
+          }
+        },
+        {
+          "type": "text",
+          "id": "8e796e35-6870-4018-97fe-681725239a88",
+          "info": {
+            "editorName": "btnBackText",
+            "name": "btnBackText",
+            "x": 376,
+            "y": 16,
+            "text": "BACK",
+            "style.fill": "#9e627c",
+            "style.align": "CENTER"
+          }
+        },
+        {
           "type": "atlas-sprite",
           "id": "fae1766c-1126-4baa-a42b-575da3a4c9df",
           "asset": "1",
@@ -136,6 +159,12 @@
       "section": "pack1",
       "asset": "all-images",
       "sprite": "stage"
+    },
+    "2": {
+      "file": "WebContent/assets/pack.json",
+      "section": "pack1",
+      "asset": "all-images",
+      "sprite": "line"
     }
   },
   "prefab-table": {}

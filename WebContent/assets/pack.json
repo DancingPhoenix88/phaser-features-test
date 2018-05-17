@@ -50,8 +50,14 @@
       "overwrite": false
     }
   ],
+  "preload": [{
+    "type": "image",
+    "key": "progress-bar",
+    "url": "assets/sprites/progress-bar.png",
+    "overwrite": false
+  }],
   "meta": {
-    "generated": "1526382587634",
+    "generated": "1526452749723",
     "app": "Phaser Editor",
     "url": "http://phasereditor.boniatillo.com",
     "version": "1.0",

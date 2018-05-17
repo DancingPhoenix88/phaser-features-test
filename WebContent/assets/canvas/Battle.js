@@ -22,34 +22,11 @@ Battle.prototype.constructor = Battle;
 
 Battle.prototype.init = function () {
 	
-	// scale
-	this.game.scale.scaleMode               = Phaser.ScaleManager.SHOW_ALL;
-	this.game.scale.pageAlignHorizontally   = true;
-	this.game.scale.pageAlignVertically     = true;
-	this.game.stage.disableVisibilityChange = true;
-	
-	this.stage.backgroundColor = '#f9f9f9';
-	
-	// Configured in canvas Configuration UI
-	addOptionalPlugin( Phaser.Plugin.EPSY );
-	addOptionalPlugin( PhaserSpine.SpinePlugin );
-	//addOptionalPlugin( Phaser.Plugin.AdvancedTiming, { mode : 'graph' } ); // doesn't work with parameter
-	var at = addOptionalPlugin( Phaser.Plugin.AdvancedTiming );
-	if (at) at.mode = 'graph';
-	
-	if (!this.game.device.desktop) { return; }
-	addOptionalPlugin( Phaser.Plugin.SceneGraph );
-	addOptionalPlugin( Phaser.Plugin.Step );
-	addOptionalPlugin( Phaser.Plugin.Debug );
-	addOptionalPlugin( Phaser.Plugin.Inspector );
-	
 };
 
 Battle.prototype.preload = function () {
 	
-	this.load.pack('pack1', 'assets/pack.json');
-	
-	// Configured in canvas Configuration UI
+	//--Generated Spine load (from user canvas code)
 	this.load.spine( 'avatar', 'assets/animations/spineboy.json' );
 	
 };
@@ -74,6 +51,14 @@ Battle.prototype.create = function () {
 	_particlesGroup.name = 'particlesGroup';
 	_particlesGroup.position.setTo(79.0, 254.0);
 	
+	var _btnBackBg = this.add.button(360.0, 8.0, 'all-images', this.toMenuState, this, null, 'line', null, null);
+	_btnBackBg.name = 'btnBackBg';
+	_btnBackBg.scale.setTo(1.7, 4.0);
+	_btnBackBg.alpha = 0.9;
+	
+	var _btnBackText = this.add.text(376.0, 16.0, 'BACK', {"font":"bold 20px Arial","fill":"#9e627c","align":"center"});
+	_btnBackText.name = 'btnBackText';
+	
 	var _squareIndicator = this.add.sprite(-214.0, -35.0, 'all-images', 'stage');
 	_squareIndicator.name = 'squareIndicator';
 	_squareIndicator.scale.setTo(3.0, 3.0);
@@ -89,7 +74,7 @@ Battle.prototype.create = function () {
 	this.fParticlesGroup = _particlesGroup;
 	this.fSquareIndicator = _squareIndicator;
 	
-	// Configured in canvas Configuration UI
+	//--Generated code from canvas user code
 	this.initStage(); 
 	
 };
@@ -113,78 +98,83 @@ Battle.prototype.NUMBER_OF_COLORS       = Battle.prototype.COLORS.length;
 Battle.prototype.PHASES                 = ["ACTION", "Wait..."];
 Battle.prototype.PHASE_ACTION           = 0;
 Battle.prototype.PHASE_WAIT             = 1;
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 // CONFIG
 Battle.prototype.DEBUG_ENABLE           = false;
 Battle.prototype.PARTICLE_ENABLE        = true;
 Battle.prototype.USE_EXPORTED_PARTICLE  = false; // TODO: didn't work yet
 Battle.prototype.SPINE_ENABLE           = true;
 Battle.prototype.LIVE_LINE_ENABLE       = true;
-//--------------------------------------------------------------------------------------------------------------------------------
+Battle.prototype.USE_TWEEN_POOL         = false; // doesn't work yet, because giving tween back to pool needs callback
+//-----------------------------------------------------------------------------------------------------------
 // PROPERTIES
-Battle.prototype.pool           = [];
-Battle.prototype.lines          = [];
-Battle.prototype.visibleLines   = [];
-Battle.prototype.fxExplodes     = [];
-Battle.prototype.types          = [];
-Battle.prototype.board          = [];
-Battle.prototype.phase          = Battle.prototype.PHASE_WAIT;
-Battle.prototype.connects       = [];
-Battle.prototype.connectingType = Battle.prototype.EMPTY;
-Battle.prototype.squareFormed   = false;
-Battle.prototype.avatar         = null;
-Battle.prototype.isGrabbing     = false;
-Battle.prototype.liveLine       = null;
-Battle.prototype.sfxPool        = [];
-Battle.prototype.cachedStageX   = 0;
-Battle.prototype.cachedStageY   = 0;
-Battle.prototype.cachedGroupX   = 0;
-Battle.prototype.cachedGroupY   = 0;
-//--------------------------------------------------------------------------------------------------------------------------------
+Battle.prototype.poolOfDots             = null;
+Battle.prototype.mapOfLines             = [];
+Battle.prototype.listOfVisibleLines     = [];
+Battle.prototype.mapOfExplodeFxs        = [];
+Battle.prototype.tableOfTypes           = [];
+Battle.prototype.tableOfDots            = [];
+Battle.prototype.phase                  = Battle.prototype.PHASE_WAIT;
+Battle.prototype.listOfConnectedDots    = [];
+Battle.prototype.connectingType         = Battle.prototype.EMPTY;
+Battle.prototype.isSquareFormed         = false;
+Battle.prototype.avatar                 = null;
+Battle.prototype.isGrabbing             = false;
+Battle.prototype.liveLine               = null;
+Battle.prototype.mapOfSfxs              = [];
+Battle.prototype.cachedStageX           = 0;
+Battle.prototype.cachedStageY           = 0;
+Battle.prototype.cachedGroupX           = 0;
+Battle.prototype.cachedGroupY           = 0;
+Battle.prototype.poolOfTweens           = null;
+//-----------------------------------------------------------------------------------------------------------
 /**
  * Initialize everything
  */
 Battle.prototype.initStage = function () {
+    this.hideSquareIndicator();
+    
     // Cache unchanged numbers
     this.cachedStageX = this.fStage.x;
     this.cachedStageY = this.fStage.y;
     this.cachedGroupX = this.fDotsGroup.x;
     this.cachedGroupY = this.fDotsGroup.y;
-    
+
     // Init many things
-    this.initPool();
+    this.initPoolOfDots();
     this.initLineGrid();
     this.initParticles();
     this.initAnimations();
     this.initAudio();
-    
-    // Init board state as empty
+    this.initTweens();
+
+    // Init tableOfDots state as empty
     for (var i = 0; i < this.GRID_WIDTH; ++i) {
-        this.types[i] = [];
-        this.board[i] = [];
+        this.tableOfTypes[i] = [];
+        this.tableOfDots[i] = [];
         for (var k = 0; k < this.GRID_HEIGHT; ++k) {
-            this.types[i][k] = this.EMPTY;
+            this.tableOfTypes[i][k] = this.EMPTY;
         }
     }
 
-    // Move dots from pool to board
+    // Move dots from poolOfDots to tableOfDots
     this.spawnDots();
 
     // Setup interaction
     this.input.onDown.add( this.onGrab, this );
     this.input.addMoveCallback( this.onMovePointer, this );
-    this.input.onUp.add( this.onRelease, this );  
+    this.input.onUp.add( this.onRelease, this );
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [GRAPHIC]
- * Spawn new dots into board
+ * Spawn new dots into tableOfDots
  * @param excludeType : don't pick this color (bonus when square is formed)
  */
 Battle.prototype.spawnDots = function (excludeType) {
     var duration = 0;
     var longestDuration = 0;
-    
+
     // Setup colors to pick
     var availableColors = [];
     for (var i = 1; i <= this.NUMBER_OF_COLORS; ++i) {
@@ -193,36 +183,41 @@ Battle.prototype.spawnDots = function (excludeType) {
         }
     }
 //    console.log( "exclude " + excludeType + " => " + availableColors );
-    
+
     for (var i = 0; i < this.GRID_WIDTH; ++i) {
         // move old dots down
         var kOccupied;
         var kEmpty = this.GRID_HEIGHT - 1;
         do {
-            while (kEmpty >= 0 && !this.isEmpty( this.types[i][kEmpty] )) { --kEmpty; }          // find empty slot (may not found)
+            while (kEmpty >= 0 && !this.isEmpty( this.tableOfTypes[i][kEmpty] )) { --kEmpty; }          // find empty slot (may not found)
             kOccupied = kEmpty - 1;
-            while (kOccupied >= 0 && this.isEmpty( this.types[i][kOccupied] )) { --kOccupied; }  // find occupied slot above empty slot (may not found)
+            while (kOccupied >= 0 && this.isEmpty( this.tableOfTypes[i][kOccupied] )) { --kOccupied; }  // find occupied slot above empty slot (may not found)
             if (kOccupied >= 0 && kEmpty >= 0) { // fact: kOccupied != kEmpty
                 // move dot to empty slot
-                /** @type Phaser.Sprite */ var dot = this.board[i][kOccupied];
-                this.board[i][kOccupied] = null;
-                this.board[i][kEmpty]    = dot;
-                
+                /** @type Phaser.Sprite */ var dot = this.tableOfDots[i][kOccupied];
+                this.tableOfDots[i][kOccupied] = null;
+                this.tableOfDots[i][kEmpty]    = dot;
+
                 // update type matrix
-                this.types[i][kEmpty]    = this.types[i][kOccupied];
-                this.types[i][kOccupied] = this.EMPTY;
-                
+                this.tableOfTypes[i][kEmpty]    = this.tableOfTypes[i][kOccupied];
+                this.tableOfTypes[i][kOccupied] = this.EMPTY;
+
                 // tween
                 duration = this.FALL_1_FLOOR_DURATION * (kEmpty - kOccupied);
-                this.add.tween(dot)
-                    .to( {y: this.rowToY( kEmpty )}, duration, Phaser.Easing.Bounce.Out, true);
+                if (this.USE_TWEEN_POOL) {
+                    this.getTweenFor( dot )
+                        .to( {y: this.rowToY( kEmpty )}, duration, Phaser.Easing.Bounce.Out, true);
+                } else {
+                    this.add.tween(dot)
+                        .to( {y: this.rowToY( kEmpty )}, duration, Phaser.Easing.Bounce.Out, true);
+                }
                 longestDuration = Math.max( duration, longestDuration );
             }
         } while (kOccupied >= 0 && kEmpty >= 0);
-        
+
         // skip if column is full
         if (kEmpty < 0) { continue; }
-        
+
         // spawn new dots
         var countNewDots = kEmpty + 1;
         var duration     = this.FALL_1_FLOOR_DURATION * countNewDots;
@@ -231,36 +226,41 @@ Battle.prototype.spawnDots = function (excludeType) {
             // Don't need to have /** @type */ before 'var', because 'getDotFromPool' specified return type
             /** @type Phaser.Sprite */ var dot = this.getDotFromPool();
             dot.position.set( this.colToX( i ), this.rowToY( kEmpty - countNewDots ) );
-            
+
             // save position & type
-            var dotType             = Phaser.ArrayUtils.getRandomItem( availableColors );
-            this.board[i][kEmpty]   = dot;
-            this.types[i][kEmpty]   = dotType;
-            dot.tint                = this.COLORS[ dotType - 1 ];
+            var dotType                  = Phaser.ArrayUtils.getRandomItem( availableColors );
+            this.tableOfDots[i][kEmpty]  = dot;
+            this.tableOfTypes[i][kEmpty] = dotType;
+            dot.tint                     = this.COLORS[ dotType - 1 ];
 
             // tween
-            this.add.tween(dot)
-                .to( {y: this.rowToY( kEmpty )}, duration, Phaser.Easing.Bounce.Out, true);
-            
+            if (this.USE_TWEEN_POOL) {
+                this.getTweenFor( dot )
+                    .to( {y: this.rowToY( kEmpty )}, duration, Phaser.Easing.Bounce.Out, true);
+            } else {
+                this.add.tween(dot)
+                    .to( {y: this.rowToY( kEmpty )}, duration, Phaser.Easing.Bounce.Out, true);
+            }
             --kEmpty;
         }
         longestDuration = Math.max( duration, longestDuration );
     }
-    
+
     this.time.events.add( longestDuration, this.switchPhase, this, this.PHASE_ACTION );
-    
+
 //    console.log("after spawning");
-//    this.showPoolInfo();
+//    this.poolOfDots.debug();
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [GRAPHIC]
- * Create all dots needed for the game and put them in a pool for re-using later
+ * Create all dots needed for the game and put them in a poolOfDots for re-using later
  */
-Battle.prototype.initPool = function () {
-    var poolSize  = this.GRID_WIDTH * this.GRID_HEIGHT * 2;
-    var dotsGroup = this.fDotsGroup;
-    for (var i = 0; i < poolSize; ++i) {
+Battle.prototype.initPoolOfDots = function () {
+    var capacity    = this.GRID_WIDTH * this.GRID_HEIGHT * 2;
+    this.poolOfDots = new RecyclePool( capacity );
+    var dotsGroup   = this.fDotsGroup;
+    for (var i = 0; i < capacity; ++i) {
         /** @type Phaser.Sprite */ var dot = this.add.sprite( 0, 0, 'all-images', 'dot', dotsGroup );
         dot.anchor.set( 0.5 );
         dot.data = { id : i }; // for debug only
@@ -268,38 +268,26 @@ Battle.prototype.initPool = function () {
         this.returnDotToPool( dot );
     }
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [GRAPHIC]
- * @returns {Phaser.Sprite} Dot (in pool) ready to use
+ * @returns {Phaser.Sprite} Dot (in poolOfDots) ready to use
  */
 Battle.prototype.getDotFromPool = function () {
-    /** @type Phaser.Sprite */ var dot = this.pool.shift();
+    /** @type Phaser.Sprite */ var dot = this.poolOfDots.takeOut();
     dot.scale.set( 1 );
-    dot.visible = true;
+    dot.visible    = true;
     return dot;
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
- * @param dot : This dot is destroyed -> put back into pool
+ * @param dot : This dot is destroyed -> put back into poolOfDots
  */
 Battle.prototype.returnDotToPool = function (dot) {
-    dot.visible = false;
-    this.pool.push( dot );
+    dot.visible     = false;
+    this.poolOfDots.giveBack( dot );
 };
-//--------------------------------------------------------------------------------------------------------------------------------
-/**
- * [DEBUG] Pool info
- */
-//Battle.prototype.showPoolInfo = function () {
-//    var n = this.pool.length;
-//    var s = "POOL (" + n + "): ";
-//    for (var i = 0; i < n; ++i) {
-//        s += this.pool[i].data.id + ", ";
-//    }
-//    console.log( s );
-//};
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [GRAPHIC]
  * Initialize connections between dots
@@ -311,41 +299,41 @@ Battle.prototype.initLineGrid = function () {
             /** @type Phaser.Sprite */ var line = this.add.sprite( 0, 0, 'all-images', 'line', linesGroup );
             line.anchor.set( 0, 0.5 );
             line.position.set( this.colToX(i), this.rowToY(k) );
-            line.visible = false;
-            
+            line.visible    = false;
+
             var id1 = this.colRowToIndex(i, k);
             var id2 = this.colRowToIndex(i + 1, k);
-            this.lines[ this.getLineIndexBetween(id1, id2) ] = 
-            this.lines[ this.getLineIndexBetween(id2, id1) ] = line;
+            this.mapOfLines[ this.getLineIndexBetween(id1, id2) ] =
+            this.mapOfLines[ this.getLineIndexBetween(id2, id1) ] = line;
             line.name = 'line_' + this.getLineIndexBetween(id1, id2); // to view in Phaser.Plugin.Debug.SceneTree
         }
     }
-    
+
     var rotation = Math.PI / 2;
     for (var i = 0; i < this.GRID_WIDTH; ++i) {
         for (var k = 0; k < this.GRID_HEIGHT - 1; ++k) {
             /** @type Phaser.Sprite */ var line = this.add.sprite( 0, 0, 'all-images', 'line', linesGroup );
             line.anchor.set( 0, 0.5 );
             line.position.set( this.colToX(i), this.rowToY(k) );
-            line.rotation = rotation;
-            line.visible = false;
-            
+            line.rotation   = rotation;
+            line.visible    = false;
+
             var id1 = this.colRowToIndex(i, k);
             var id2 = this.colRowToIndex(i, k + 1);
-            this.lines[ this.getLineIndexBetween(id1, id2) ] = 
-            this.lines[ this.getLineIndexBetween(id2, id1) ] = line;
+            this.mapOfLines[ this.getLineIndexBetween(id1, id2) ] =
+            this.mapOfLines[ this.getLineIndexBetween(id2, id1) ] = line;
             line.name = 'line_' + this.getLineIndexBetween(id1, id2); // to view in Phaser.Plugin.Debug.SceneTree
         }
     }
-    
+
     if (!this.LIVE_LINE_ENABLE) { return; }
     /** @type Phaser.Sprite */ var line = this.add.sprite( 0, 0, 'all-images', 'line', linesGroup );
     line.anchor.set( 0, 0.5 );
-    line.visible = false;
-    this.liveLine = line;
+    line.visible    = false;
+    this.liveLine   = line;
     line.name = 'line_LIVE'; // to view in Phaser.Plugin.Debug.SceneTree
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * @param i1 : Index of dot #1
  * @param i2 : Index of dot #2
@@ -353,31 +341,31 @@ Battle.prototype.initLineGrid = function () {
  */
 Battle.prototype.getLineIndexBetween = function (i1, i2) {
     return (i1 + '_' + i2);
-}; 
-//--------------------------------------------------------------------------------------------------------------------------------
+};
+//-----------------------------------------------------------------------------------------------------------
 /**
  * @param i1 : Index of dot #1
  * @param i2 : Index of dot #2
  * @returns Connection between these dots
  */
 Battle.prototype.getLineBetween = function (i1, i2) {
-    return this.lines[ this.getLineIndexBetween( i1, i2 ) ];
+    return this.mapOfLines[ this.getLineIndexBetween( i1, i2 ) ];
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [GRAPHIC]
  * Hide all dot connections
  */
 Battle.prototype.hideGridLines = function () {
-    for (var i = 0; i < this.visibleLines.length; ++i) {
-        this.visibleLines[i].visible = false;
+    for (var i = 0; i < this.listOfVisibleLines.length; ++i) {
+        this.listOfVisibleLines[i].visible      = false;
     }
-    this.visibleLines = [];
-    
+    this.listOfVisibleLines = [];
+
     if (!this.LIVE_LINE_ENABLE) { return; }
-    this.liveLine.visible = false;
+    this.liveLine.visible       = false;
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * @param t : Dot type in this slot
  * @returns Check if this slot is empty or not
@@ -385,7 +373,7 @@ Battle.prototype.hideGridLines = function () {
 Battle.prototype.isEmpty = function (t) {
     return (t == this.EMPTY);
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [INPUT] On mouse down
  */
@@ -393,9 +381,9 @@ Battle.prototype.onGrab = function () {
     /** @type Phaser.Pointer */ var pointer = this.input.activePointer;
     var col = Math.floor( (pointer.position.x - this.cachedStageX) / (this.DOT_SIZE + this.DOT_SPACE) );
     var row = Math.floor( (pointer.position.y - this.cachedStageY) / (this.DOT_SIZE + this.DOT_SPACE) );
-    this.isGrabbing = this.isOnBoard( col, row ); 
+    this.isGrabbing = this.isOnBoard( col, row );
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [INPUT] On mouse move
  * @param pointer
@@ -404,15 +392,15 @@ Battle.prototype.onMovePointer = function (pointer) {
     if (this.phase != this.PHASE_ACTION) { return; }    // not ACTION time
     if (!pointer.isDown) { return; }                    // no touching
     if (!this.isGrabbing) { return; }                   // first touch is outside of stage
-    
+
     var col = Math.floor( (pointer.position.x - this.cachedStageX) / (this.DOT_SIZE + this.DOT_SPACE) );
     var row = Math.floor( (pointer.position.y - this.cachedStageY) / (this.DOT_SIZE + this.DOT_SPACE) );
     if (this.isOnBoard( col, row )) {
         this.onTouch( col, row );
     }
-    
+
     if (!this.LIVE_LINE_ENABLE) { return; }
-    if (this.connects.length == 0) {
+    if (this.listOfConnectedDots.length == 0) {
         return;
     }
     /** @type Phaser.Point */ var dotPos = this.liveLine.position;
@@ -420,26 +408,26 @@ Battle.prototype.onMovePointer = function (pointer) {
     this.liveLine.scale.set( (dotPos.distance( curPos )) / this.LIVE_LINE_LENGTH, 1 );
     this.liveLine.rotation = dotPos.angle( curPos );
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [INPUT] On mouse up
  */
 Battle.prototype.onRelease = function () {
     this.isGrabbing = false;
     if (!this.isConnecting()) { return; }
-    
-    if (this.connects.length > 1) {
+
+    if (this.listOfConnectedDots.length > 1) {
         this.matchDots();
         this.spawnDots( this.connectingType );
     } else {
         this.cancelConnecting();
     }
-    
+
     this.connectingType = this.EMPTY;
     this.hideSquareIndicator();
     this.hideGridLines();
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [DEBUG]
  */
@@ -447,18 +435,18 @@ Battle.prototype.render = function () {
     if (this.DEBUG_ENABLE) {
         // PHASE
         this.debug.text( this.PHASES[ this.phase ], 10, 20, 'red' );
-        
+
         // DOTS - TYPE (if debug text has same color with dot (hard to read) => correct)
         var offsetX = this.cachedStageX + this.DOT_SIZE / 2 - 12;
         var offsetY = this.cachedStageY + this.DOT_SIZE / 2;
         for (var i = 0; i < this.GRID_WIDTH; ++i) {
             for (var k = 0; k < this.GRID_HEIGHT; ++k) {
-                if (!this.isEmpty( this.types[i][k] )) {
-                    this.debug.text( 
-                        this.types[i][k], 
-                        offsetX + this.board[i][k].x, 
-                        offsetY + this.board[i][k].y,
-                        Phaser.Color.getWebRGB( this.COLORS[ this.types[i][k] - 1 ] )
+                if (!this.isEmpty( this.tableOfTypes[i][k] )) {
+                    this.debug.text(
+                        this.tableOfTypes[i][k],
+                        offsetX + this.tableOfDots[i][k].x,
+                        offsetY + this.tableOfDots[i][k].y,
+                        Phaser.Color.getWebRGB( this.COLORS[ this.tableOfTypes[i][k] - 1 ] )
                     );
                 }
             }
@@ -466,116 +454,116 @@ Battle.prototype.render = function () {
 
         // DOTS - CONNECTING
         if (this.phase != this.PHASE_ACTION || !this.isConnecting()) { return; }
-        for (var i = 0; i < this.connects.length; ++i) {
-            var c = this.indexToCol( this.connects[i] );
-            var r = this.indexToRow( this.connects[i] );
-            this.debug.spriteBounds( this.board[c][r] );
+        for (var i = 0; i < this.listOfConnectedDots.length; ++i) {
+            var c = this.indexToCol( this.listOfConnectedDots[i] );
+            var r = this.indexToRow( this.listOfConnectedDots[i] );
+            this.debug.spriteBounds( this.tableOfDots[c][r] );
         }
     }
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * Main game logic: Handle when mouse touches dot
  * @param col
  * @param row
  */
 Battle.prototype.onTouch = function (col, row) {
-    var type = this.types[col][row];
+    var type = this.tableOfTypes[col][row];
     if (this.isEmpty( type )) { return; }
-    
+
     // Case 1: Set as 1st dot---------------------------------------------
     var index = this.colRowToIndex( col, row );
     if (!this.isConnecting()) {
-        this.connectingType = type;
-        this.connects       = [ index ];
-        this.squareFormed   = false;
+        this.connectingType      = type;
+        this.listOfConnectedDots = [ index ];
+        this.isSquareFormed      = false;
         this.onConnectNewDot( index );
-        console.log( "Begin connecting " + type + ": " + this.connects );
+        console.log( "Begin connecting " + type + ": " + this.listOfConnectedDots );
         return;
     }
-    
+
     // early reject from case 2, 3, 4
-    var dotsCount = this.connects.length;
+    var dotsCount = this.listOfConnectedDots.length;
     if (type != this.connectingType) { return; }                                // is different color
-    if (index == this.connects[ dotsCount - 1 ]) { return; }                    // is last connected dot
-    if (!this.isAdjacent(index, this.connects[ dotsCount - 1 ])) { return; }    // is not adjacent
-    
+    if (index == this.listOfConnectedDots[ dotsCount - 1 ]) { return; }                    // is last connected dot
+    if (!this.isAdjacent(index, this.listOfConnectedDots[ dotsCount - 1 ])) { return; }    // is not adjacent
+
     // Case 2: Cancel newest dot---------------------------------------------
-    var duplicatedPos   = this.connects.indexOf( index );
-    var lastDotIndex    = this.connects[ dotsCount - 1 ];
+    var duplicatedPos = this.listOfConnectedDots.indexOf( index );
+    var lastDotIndex  = this.listOfConnectedDots[ dotsCount - 1 ];
     if (duplicatedPos > -1 && duplicatedPos == dotsCount - 2) {
-        this.onDisconnectDot( lastDotIndex, this.connects[ dotsCount - 2 ] );
-        this.connects.pop();
-        this.squareFormed = false;
+        this.onDisconnectDot( lastDotIndex, this.listOfConnectedDots[ dotsCount - 2 ] );
+        this.listOfConnectedDots.pop();
+        this.isSquareFormed = false;
         this.hideSquareIndicator();
-        console.log( "\tReject " + type + ": " + this.connects );
+        console.log( "\tReject " + type + ": " + this.listOfConnectedDots );
         return;
     }
-    
+
     // If square was formed already -> early reject from case 3, 4
-    if (this.squareFormed) { return; }
-    
+    if (this.isSquareFormed) { return; }
+
     // Case 3: Add new dot---------------------------------------------
     if (duplicatedPos == -1) {
-        this.connects.push( index );
+        this.listOfConnectedDots.push( index );
         this.onConnectNewDot( index, lastDotIndex );
-        console.log( "\tAdd " + type + ": " + this.connects );
+        console.log( "\tAdd " + type + ": " + this.listOfConnectedDots );
         return;
     }
-    
+
     // If there's not enough dots to form a square -> early reject from case 4
     if (duplicatedPos > dotsCount - 4) { return; }
-    
+
     // Case 4: Square---------------------------------------------
     var turnsCount = 0;
-    var direction = this.isAdjacentAndOnSameRow( this.connects[ duplicatedPos ], this.connects[ duplicatedPos + 1 ] );
+    var direction = this.isAdjacentAndOnSameRow( this.listOfConnectedDots[ duplicatedPos ], this.listOfConnectedDots[ duplicatedPos + 1 ] );
     do {
         ++duplicatedPos;
-        var newDirection = this.isAdjacentAndOnSameRow( this.connects[ duplicatedPos ], this.connects[ duplicatedPos + 1 ] );
+        var newDirection = this.isAdjacentAndOnSameRow( this.listOfConnectedDots[ duplicatedPos ], this.listOfConnectedDots[ duplicatedPos + 1 ] );
         if (direction != newDirection) {
             direction = newDirection;
             ++turnsCount;
         }
     } while (duplicatedPos < dotsCount - 1);
     if (turnsCount < 4) {
-        this.connects.push( index );
+        this.listOfConnectedDots.push( index );
         this.onConnectNewDot( index, lastDotIndex );
-        console.log( "\t[SQUARE] Re-Add " + type + ": " + this.connects );
-        this.squareFormed = true;
+        console.log( "\t[SQUARE] Re-Add " + type + ": " + this.listOfConnectedDots );
+        this.isSquareFormed = true;
         this.showSquareIndicator( this.connectingType );
     }
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * On mouse up and there're dots to match
  */
 Battle.prototype.matchDots = function () {
     if (!this.isConnecting()) { return; }
-    
+
     this.switchPhase( this.PHASE_WAIT );
-    if (this.squareFormed) {
+    if (this.isSquareFormed) {
         console.log( "Clear ALL dots type " + this.connectingType );
         this.clear( this.getDotsWhichIs( this.connectingType ) );
         this.sfx( 'clear' );
     } else {
         console.log( "Clear matched dots type " + this.connectingType );
-        this.clear( this.connects );
+        this.clear( this.listOfConnectedDots );
         this.sfx( 'match' );
     }
-    this.animateAvatarOnMatch( this.squareFormed );
+    this.animateAvatarOnMatch( this.isSquareFormed );
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * On mouse up and there're not enough dots to match
  */
 Battle.prototype.cancelConnecting = function () {
-    for (var i = 0; i < this.connects.length; ++i) {
-        this.onDisconnectDot( this.connects[i] );
+    for (var i = 0; i < this.listOfConnectedDots.length; ++i) {
+        this.onDisconnectDot( this.listOfConnectedDots[i] );
     }
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
- * [GRAPHIC] 
+ * [GRAPHIC]
  * @param indices : Index of dots to be destroyed
  */
 Battle.prototype.clear = function (indices) {
@@ -585,29 +573,35 @@ Battle.prototype.clear = function (indices) {
         var id  = indices[i];
         var c   = this.indexToCol( id );
         var r   = this.indexToRow( id );
-        
-        this.types[c][r] = this.EMPTY;
-        dots.push( this.board[c][r] );
-        
-        this.add.tween( this.board[c][r].scale ).to( {x: 0, y:0}, this.DOT_ANIM_DURATION, Phaser.Easing.Quadratic.Out, true );
-        
+
+        this.tableOfTypes[c][r] = this.EMPTY;
+        dots.push( this.tableOfDots[c][r] );
+
+        if (this.USE_TWEEN_POOL) {
+            this.getTweenFor( this.tableOfDots[c][r].scale )
+                .to( {x: 0, y:0}, this.DOT_ANIM_DURATION, Phaser.Easing.Quadratic.Out, true );
+        } else {
+            this.add.tween( this.tableOfDots[c][r].scale )
+                .to( {x: 0, y:0}, this.DOT_ANIM_DURATION, Phaser.Easing.Quadratic.Out, true );
+        }
+
         this.showParticleAt( id, color );
     }
     this.time.events.add( this.DOT_ANIM_DURATION, this.postClear, this, dots );
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
- * @param dots : Wait for dots to finish 'EXPLODE' animation, then return them to pool to re-use later
+ * @param dots : Wait for dots to finish 'EXPLODE' animation, then return them to poolOfDots to re-use later
  */
 Battle.prototype.postClear = function (dots) {
     for (var i = 0; i < dots.length; ++i) {
         this.returnDotToPool( dots[i] );
     }
-    
+
 //    console.log("post clearing");
-//    this.showPoolInfo();
+//    this.poolOfDots.debug();
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * @returns
  * @param type : Filter dots by color (type)
@@ -616,14 +610,14 @@ Battle.prototype.getDotsWhichIs = function (type) {
     var dots = [];
     for (var i = 0; i < this.GRID_WIDTH; ++i) {
         for (var k = 0; k < this.GRID_HEIGHT; ++k) {
-            if (this.types[i][k] == type) {
+            if (this.tableOfTypes[i][k] == type) {
                 dots.push( this.colRowToIndex(i, k) );
             }
         }
     }
     return dots;
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [GRAPHIC] VFX when connect new dot
  * @param newDotIndex : New connected dot
@@ -632,30 +626,37 @@ Battle.prototype.getDotsWhichIs = function (type) {
 Battle.prototype.onConnectNewDot = function (newDotIndex, lastDotIndex) {
     var c = this.indexToCol( newDotIndex );
     var r = this.indexToRow( newDotIndex );
-    /** @type Phaser.Sprite */ var dot = this.board[c][r];
-    
+    /** @type Phaser.Sprite */ var dot = this.tableOfDots[c][r];
+
     // highlight dot
-    this.tweens.remove( dot.scale );
-    this.add.tween( dot.scale ).to( { x : 1.2, y : 1.2 }, this.DOT_ANIM_DURATION, Phaser.Easing.Bounce.Out, true );
+    if (this.USE_TWEEN_POOL) {
+        this.stopTweensOf( dot.scale );
+        this.getTweenFor( dot.scale )
+            .to( { x : 1.2, y : 1.2 }, this.DOT_ANIM_DURATION, Phaser.Easing.Bounce.Out, true );
+    } else {
+        this.tweens.remove( dot.scale );
+        this.add.tween( dot.scale )
+            .to( { x : 1.2, y : 1.2 }, this.DOT_ANIM_DURATION, Phaser.Easing.Bounce.Out, true );
+    }
     this.sfx( 'connect' );
-    
+
     // show connection
     if (lastDotIndex != undefined) {
         /** @type Phaser.Sprite */ var line = this.getLineBetween( newDotIndex, lastDotIndex );
-        if (this.visibleLines.indexOf(line) > -1) {
+        if (this.listOfVisibleLines.indexOf(line) > -1) {
             return;
         }
-        this.visibleLines.push( line );
-        line.tint = this.COLORS[ this.connectingType - 1 ];
-        line.visible = true;
+        this.listOfVisibleLines.push( line );
+        line.tint       = this.COLORS[ this.connectingType - 1 ];
+        line.visible    = true;
     }
-    
+
     if (!this.LIVE_LINE_ENABLE) { return; }
-    this.liveLine.position = dot.position;
-    this.liveLine.tint     = this.COLORS[ this.connectingType - 1 ];
-    this.liveLine.visible  = true;
+    this.liveLine.position      = dot.position;
+    this.liveLine.tint          = this.COLORS[ this.connectingType - 1 ];
+    this.liveLine.visible       = true;
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [GRAPHIC] VFX when disconnect a dot
  * @param dotIndex : Disconnected dot
@@ -664,54 +665,61 @@ Battle.prototype.onConnectNewDot = function (newDotIndex, lastDotIndex) {
 Battle.prototype.onDisconnectDot = function (dotIndex, lastDotIndex) {
     var c = this.indexToCol( dotIndex );
     var r = this.indexToRow( dotIndex );
-    /** @type Phaser.Sprite */ var dot = this.board[c][r];
-    
+    /** @type Phaser.Sprite */ var dot = this.tableOfDots[c][r];
+
     // un-highlight dot
-    this.tweens.remove( dot.scale );
-    this.add.tween( dot.scale ).to( { x : 1, y : 1 }, this.DOT_ANIM_DURATION, Phaser.Easing.Cubic.Out, true );
+    if (this.USE_TWEEN_POOL) {
+        this.stopTweensOf( dot.scale );
+        this.getTweenFor( dot.scale )
+            .to( { x : 1, y : 1 }, this.DOT_ANIM_DURATION, Phaser.Easing.Cubic.Out, true );
+    } else {
+        this.tweens.remove( dot.scale );
+        this.add.tween( dot.scale )
+            .to( { x : 1, y : 1 }, this.DOT_ANIM_DURATION, Phaser.Easing.Cubic.Out, true );
+    }
     this.sfx( 'disconnect' );
-    
+
     // hide connection
     if (lastDotIndex != undefined) {
         /** @type Phaser.Sprite */ var line = this.getLineBetween( dotIndex, lastDotIndex );
-        var lineIndex = this.visibleLines.lastIndexOf( line ); 
+        var lineIndex = this.listOfVisibleLines.lastIndexOf( line );
         if (lineIndex == -1) {
             return;
         }
-        this.visibleLines.splice( lineIndex, 1 );
-        line.visible = false;
-        
+        this.listOfVisibleLines.splice( lineIndex, 1 );
+        line.visible    = false;
+
         if (!this.LIVE_LINE_ENABLE) { return; }
         var c = this.indexToCol( lastDotIndex );
         var r = this.indexToRow( lastDotIndex );
-        /** @type Phaser.Sprite */ var dot = this.board[c][r];
+        /** @type Phaser.Sprite */ var dot = this.tableOfDots[c][r];
         this.liveLine.position = dot.position;
     }
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [GRAPHIC] VFX when a square is formed
  * @param type : Square color
  */
 Battle.prototype.showSquareIndicator = function (type) {
-    this.fSquareIndicator.tint = this.COLORS[ type - 1 ];
-    this.fSquareIndicator.visible = true;
+    this.fSquareIndicator.tint          = this.COLORS[ type - 1 ];
+    this.fSquareIndicator.visible       = true;
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [GRAPHIC] Hide square VFX
  */
 Battle.prototype.hideSquareIndicator = function () {
-    this.fSquareIndicator.visible = false;
+    this.fSquareIndicator.visible       = false;
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [PARTICLES] Create particles (without starting)
  */
 Battle.prototype.initParticles = function () {
     if (!this.PARTICLE_ENABLE) { return; }
     var particlesGroup = this.fParticlesGroup;
-    
+
     if (this.USE_EXPORTED_PARTICLE) {
         var fxExplode = this.cache.getJSON( 'fx-explode' );
         for (var i = 0; i < this.GRID_WIDTH; ++i) {
@@ -720,7 +728,7 @@ Battle.prototype.initParticles = function () {
                 var emitter = this.game.epsy.loadSystem( fxExplode, 200, 200 );
                 particlesGroup.add( emitter );
                 emitter.position.set( this.colToX(i), this.rowToY(k) );
-                this.fxExplodes[ this.colRowToIndex(i, k) ] = emitter;
+                this.mapOfExplodeFxs[ this.colRowToIndex(i, k) ] = emitter;
             }
         }
     } else {
@@ -735,14 +743,14 @@ Battle.prototype.initParticles = function () {
                 emitter.setScale( 0.5, 0, 0.5, 0, this.EXPLODE_LIFE_SPAN );
                 emitter.setXSpeed( -200, 200 );
                 emitter.setYSpeed( -200, 200 );
-                this.fxExplodes[ this.colRowToIndex(i, k) ] = emitter;
-                
+                this.mapOfExplodeFxs[ this.colRowToIndex(i, k) ] = emitter;
+
                 emitter.name = 'fx_' + this.colRowToIndex(i, k); // to view in Phaser.Plugin.Debug.SceneTree
             }
         }
     }
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [PARTICLES] VFX when a dot explodes
  * @param index : Dot index
@@ -750,11 +758,11 @@ Battle.prototype.initParticles = function () {
  */
 Battle.prototype.showParticleAt = function (index, type) {
     if (!this.PARTICLE_ENABLE) { return; }
-    
+
     if (this.USE_EXPORTED_PARTICLE) {
-//        this.fxExplodes[ index ].emit();
+//        this.mapOfExplodeFxs[ index ].emit();
     } else {
-        /** @type Phaser.Emitter */ var emitter = this.fxExplodes[ index ];
+        /** @type Phaser.Emitter */ var emitter = this.mapOfExplodeFxs[ index ];
         var color = this.COLORS[ type - 1 ];
         emitter.forEach( function (particle) {
             particle.tint = color;
@@ -762,26 +770,26 @@ Battle.prototype.showParticleAt = function (index, type) {
         emitter.explode( this.EXPLODE_LIFE_SPAN, this.EXPLODE_MAX_PARTICLES );
     }
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [SPINE ANIMATION] Create an instance
  */
 Battle.prototype.initAnimations = function () {
     if (!this.SPINE_ENABLE) { return; }
-    
+
     this.avatar = this.add.spine( 100, this.game.height, 'avatar' );
     this.avatar.scale.set( 0.3 );
     this.avatar.setAnimationByName( 0, 'idle', true );
     this.avatar.name = 'avatar'; // to view in Phaser.Plugin.Debug.SceneTree
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [SPINE ANIMATION] Animate avatar when clearing dots
  * @param clearAll : All dots of certain color are cleared
  */
 Battle.prototype.animateAvatarOnMatch = function (clearAll) {
     if (!this.SPINE_ENABLE) { return; }
-    
+
     if (clearAll) {
         this.avatar.setAnimationByName( 0, 'jump', false );
         this.avatar.setAnimationByName( 1, 'shoot', false );
@@ -790,19 +798,17 @@ Battle.prototype.animateAvatarOnMatch = function (clearAll) {
     }
     this.avatar.addAnimationByName( 0, 'idle', true );  // play 'idle' when finish
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
- * [AUDIO] Spawn audio instances and start playing BGM (looped)
+ * [AUDIO] Spawn audio instances
  */
 Battle.prototype.initAudio = function () {
     this.loadSfx( 'clear', 0.4 );
     this.loadSfx( 'connect', 0.5 );
     this.loadSfx( 'disconnect' );
     this.loadSfx( 'match' );
-    
-    this.add.sound( 'bgm1', 0.5, true ).play();
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [AUDIO] Load & cache SFX
  * @param key : SFX key
@@ -810,75 +816,119 @@ Battle.prototype.initAudio = function () {
  */
 Battle.prototype.loadSfx = function (key, volume) {
     if (isNaN(volume)) {
-        this.sfxPool[ key ] = this.add.sound( 'sfx-' + key );
+        this.mapOfSfxs[ key ] = this.add.sound( 'sfx-' + key );
     } else {
-        this.sfxPool[ key ] = this.add.sound( 'sfx-' + key, volume );
+        this.mapOfSfxs[ key ] = this.add.sound( 'sfx-' + key, volume );
     }
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 /**
  * [AUDIO] Play SFX
  * @param key : SFX key
  */
 Battle.prototype.sfx = function (key) {
-    /** @type Phaser.Sound */var s = this.sfxPool[ key ];
+    /** @type Phaser.Sound */var s = this.mapOfSfxs[ key ];
     if (s != undefined) {
         s.play();
     } else {
         console.error( 'sfx "' + key + '" not found' );
     }
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
+/**
+ * [TWEEN] Init pool of tweens to recycle later
+ */
+Battle.prototype.initTweens = function () {
+    if (!this.USE_TWEEN_POOL) { return; }
+
+    var capacity      = this.GRID_WIDTH * this.GRID_HEIGHT * 2;
+    this.poolOfTweens = new RecyclePool( capacity );
+    for (var i = 0; i < capacity; ++i) {
+        this.poolOfTweens.giveBack( this.add.tween() );
+    }
+};
+//-----------------------------------------------------------------------------------------------------------
+/**
+ * [TWEEN] Get a tween from recycle pool, reset it
+ * @param obj New tween target
+ * @returns Tween ready to re-use
+ */
+Battle.prototype.getTweenFor = function (obj) {
+    /** @type Phaser.Tween */var t = this.poolOfTweens.takeOut();
+    t.target   = obj;
+    t.timeline = [];
+    return t;
+};
+//-----------------------------------------------------------------------------------------------------------
+/**
+ * [TWEEN] Stop all tweens having target = obj
+ * @param obj
+ * @param complete
+ */
+Battle.prototype.stopTweensOf = function (obj, complete) {
+    var allTweens = this.tweens.getAll();
+    for (var i = allTweens.length - 1; i >= 0; --i) {
+        if (allTweens[i].target == obj) {
+            allTweens[i].stop( complete );
+        }
+    }
+};
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.isOnBoard = function (c, r) {
     return (c >= 0 && r >= 0 && c < this.GRID_WIDTH && r < this.GRID_HEIGHT);
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.colRowToIndex = function (col, row) {
     return col * this.GRID_HEIGHT + row;
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.indexToCol = function (index) {
     return Math.floor( index / this.GRID_HEIGHT );
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.indexToRow = function (index) {
     return Math.floor( index % this.GRID_HEIGHT );
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.isAdjacentAndOnSameCol = function (i1, i2) { // i1, i2 must be on same column already
     return (Math.abs( i1 - i2 ) == 1);
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.isAdjacentAndOnSameRow = function (i1, i2) { // i1, i2 must be on same row already
     return (Math.abs( i1 - i2 ) == this.GRID_WIDTH);
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.isAdjacent = function (i1, i2) {
     var c1 = this.indexToCol( i1 );
     var c2 = this.indexToCol( i2 );
     if (c1 == c2) { // same column
         return this.isAdjacentAndOnSameCol( i1, i2 );
     }
-    
+
     var r1 = this.indexToRow( i1 );
     var r2 = this.indexToRow( i2 );
     if (r1 == r2) { // same row
         return this.isAdjacentAndOnSameRow( i1, i2 );
     }
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.colToX = function (c) {
     return c * (this.DOT_SIZE + this.DOT_SPACE) + 16;
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.rowToY = function (r) {
     return r * (this.DOT_SIZE + this.DOT_SPACE) + 16;
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.isConnecting = function () {
   return !this.isEmpty( this.connectingType );
 };
-//--------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 Battle.prototype.switchPhase = function (p) {
     this.phase = p;
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.toMenuState = function () {
+//    this.state.start( 'Menu', FadeOut, FadeIn ); // TODO: Not smooth enough, think of camera fading
+    this.state.start( 'Menu' );
 };
