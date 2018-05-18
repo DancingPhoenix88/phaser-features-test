@@ -34,7 +34,7 @@
     "preloadSprite_direction": 0,
     "load.pack": [{
       "file": "WebContent/assets/pack.json",
-      "section": "pack1"
+      "section": "battle"
     }]
   },
   "world": {

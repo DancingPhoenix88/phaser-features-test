@@ -1,5 +1,5 @@
 {
-  "pack1": [
+  "battle": [
     {
       "type": "audio",
       "key": "bgm1",
@@ -48,6 +48,12 @@
       "key": "fx-explode",
       "url": "assets/particles/fx-explode.json",
       "overwrite": false
+    },
+    {
+      "type": "json",
+      "key": "levels",
+      "url": "assets/data/levels.json",
+      "overwrite": false
     }
   ],
   "preload": [{
@@ -57,7 +63,7 @@
     "overwrite": false
   }],
   "meta": {
-    "generated": "1526452749723",
+    "generated": "1526576104457",
     "app": "Phaser Editor",
     "url": "http://phasereditor.boniatillo.com",
     "version": "1.0",

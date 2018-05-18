@@ -10,9 +10,9 @@
  * Battle.
  */
 function Battle() {
-	
+
 	Phaser.State.call(this);
-	
+
 }
 
 /** @type Phaser.State */
@@ -21,67 +21,67 @@ Battle.prototype = Battle_proto;
 Battle.prototype.constructor = Battle;
 
 Battle.prototype.init = function () {
-	
+
 };
 
 Battle.prototype.preload = function () {
-	
+
 	//--Generated Spine load (from user canvas code)
 	this.load.spine( 'avatar', 'assets/animations/spineboy.json' );
-	
+
 };
 
 Battle.prototype.create = function () {
 	var _bg = this.add.sprite(0.0, 0.0, 'bg');
 	_bg.name = 'bg';
-	
+
 	var _stage = this.add.sprite(69.0, 244.0, 'all-images', 'stage');
 	_stage.name = 'stage';
 	_stage.alpha = 0.8;
-	
+
 	var _linesGroup = this.add.group();
 	_linesGroup.name = 'linesGroup';
 	_linesGroup.position.setTo(79.0, 254.0);
-	
+
 	var _dotsGroup = this.add.group();
 	_dotsGroup.name = 'dotsGroup';
 	_dotsGroup.position.setTo(79.0, 254.0);
-	
+
 	var _particlesGroup = this.add.group();
 	_particlesGroup.name = 'particlesGroup';
 	_particlesGroup.position.setTo(79.0, 254.0);
-	
+
 	var _btnBack = this.add.group();
 	_btnBack.name = 'btnBack';
 	_btnBack.fixedToCamera = true;
-	
+
 	var _btnBackBg = this.add.button(360.0, 8.0, 'all-images', this.toMenuState, this, null, 'line', null, null, _btnBack);
 	_btnBackBg.name = 'btnBackBg';
 	_btnBackBg.scale.setTo(1.7, 4.0);
 	_btnBackBg.alpha = 0.9;
-	
+
 	var _btnBackText = this.add.text(376.0, 16.0, 'BACK', {"font":"bold 20px Arial","fill":"#9e627c","align":"center"}, _btnBack);
 	_btnBackText.name = 'btnBackText';
-	
+
 	var _squareIndicator = this.add.sprite(210.0, 385.0, 'all-images', 'dot');
 	_squareIndicator.name = 'squareIndicator';
 	_squareIndicator.scale.setTo(40.0, 40.0);
 	_squareIndicator.alpha = 0.2;
 	_squareIndicator.anchor.setTo(0.5, 0.5);
-	
-	
-	
+
+
+
 	// public fields
-	
+
 	this.fStage = _stage;
 	this.fLinesGroup = _linesGroup;
 	this.fDotsGroup = _dotsGroup;
 	this.fParticlesGroup = _particlesGroup;
 	this.fSquareIndicator = _squareIndicator;
-	
+
 	//--Generated code from canvas user code
 	this.initStage();
-	
+
 };
 
 /* --- end generated code --- */
@@ -95,15 +95,17 @@ Battle.prototype.DOT_SPACE              = 20;   // px
 Battle.prototype.FALL_1_FLOOR_DURATION  = 150;  // ms
 Battle.prototype.DOT_ANIM_DURATION      = 150;  // ms
 Battle.prototype.HIGHLIGHT_DURATION     = 400;  // ms
+Battle.prototype.SHUFFLE_DURATION       = 400;  // ms
 Battle.prototype.LIVE_LINE_LENGTH       = 52;   // px
 Battle.prototype.EXPLODE_MAX_PARTICLES  = 5;
 Battle.prototype.EXPLODE_LIFE_SPAN      = 1600;
 Battle.prototype.EMPTY                  = 0;
-Battle.prototype.COLORS                 = [0xFFE368, 0xDE369D, 0x59C9A5, 0x1A8FE3]; // Yellow, Red, Green, Blue
-Battle.prototype.NUMBER_OF_COLORS       = Battle.prototype.COLORS.length;
+Battle.prototype.HOLE                   = -1;
+Battle.prototype.COLORS                 = [0xFFE368, 0xDD3562, 0x59C9A5, 0x1A8FE3, 0x5E239D, 0x171219, 0xF7FFF6]; // Yellow, Red, Green, Blue, Purple, Black, White
 Battle.prototype.PHASES                 = ["ACTION", "Wait..."];
 Battle.prototype.PHASE_ACTION           = 0;
 Battle.prototype.PHASE_WAIT             = 1;
+Battle.prototype.MAX_SHUFFLE_TRY        = 5;
 //-----------------------------------------------------------------------------------------------------------
 // CONFIG
 Battle.prototype.DEBUG_ENABLE           = false;
@@ -135,6 +137,11 @@ Battle.prototype.cachedGroupX           = 0;
 Battle.prototype.cachedGroupY           = 0;
 Battle.prototype.poolOfTweens           = null;
 Battle.prototype.mapOfConnectFxs        = [];
+Battle.prototype.currentLevelSettings   = null;
+Battle.prototype.colorsInLevel          = null;
+Battle.prototype.requiredColor          = 0;
+Battle.prototype.countMoves             = 0;
+Battle.prototype.countClear             = 0;
 //-----------------------------------------------------------------------------------------------------------
 /**
  * Initialize everything
@@ -146,6 +153,14 @@ Battle.prototype.initStage = function () {
     this.cachedGroupX = this.fDotsGroup.x;
     this.cachedGroupY = this.fDotsGroup.y;
 
+    // Init map
+    this.resetTableOfTypes();
+    for (var i = 0; i < this.GRID_WIDTH; ++i) {
+        this.tableOfDots[i] = [];
+    }
+    // assertEqual( this.tableOfTypes.length, this.GRID_WIDTH );
+    // assertEqual( this.tableOfTypes[0].length, this.GRID_HEIGHT );
+
     // Init many things
     this.initPoolOfDots();
     this.initLineGrid();
@@ -156,14 +171,16 @@ Battle.prototype.initStage = function () {
     this.initConnectFxs();
     this.initSquareIndicator();
 
-    // Init tableOfDots state as empty
-    for (var i = 0; i < this.GRID_WIDTH; ++i) {
-        this.tableOfTypes[i] = [];
-        this.tableOfDots[i] = [];
-        for (var k = 0; k < this.GRID_HEIGHT; ++k) {
-            this.tableOfTypes[i][k] = this.EMPTY;
-        }
+    // Load level data
+    if (!this.game.data.level) {
+        this.game.data.level = new LevelManager( this.cache.getJSON( 'levels' ) );
+        this.game.data.level.debug();
     }
+    this.currentLevelSettings   = this.game.data.level.getLevel( this.game.data.userLevel );
+    this.colorsInLevel          = this.currentLevelSettings.colors;
+    this.requiredColor          = Phaser.ArrayUtils.getRandomItem( this.colorsInLevel );
+    console.log( this.currentLevelSettings );
+    console.log( '%c Required color = ' + this.requiredColor, 'background: #' + this.COLORS[ this.requiredColor - 1 ].toString(16) + '; color: #000' );
 
     // Move dots from poolOfDots to tableOfDots
     this.spawnDots();
@@ -184,13 +201,13 @@ Battle.prototype.spawnDots = function (excludeType) {
     var longestDuration = 0;
 
     // Setup colors to pick
-    var availableColors = [];
-    for (var i = 1; i <= this.NUMBER_OF_COLORS; ++i) {
-        if (i != excludeType) {
-            availableColors.push( i );
-        }
+    var availableColors = this.colorsInLevel.slice();
+    var excludedColorIndex = availableColors.indexOf( excludeType );
+    if (excludedColorIndex > -1) {
+        availableColors.splice( excludedColorIndex, 1 );
     }
 //    console.log( "exclude " + excludeType + " => " + availableColors );
+
 
     for (var i = 0; i < this.GRID_WIDTH; ++i) {
         // move old dots down
@@ -199,7 +216,7 @@ Battle.prototype.spawnDots = function (excludeType) {
         do {
             while (kEmpty >= 0 && !this.isEmpty( this.tableOfTypes[i][kEmpty] )) { --kEmpty; }          // find empty slot (may not found)
             kOccupied = kEmpty - 1;
-            while (kOccupied >= 0 && this.isEmpty( this.tableOfTypes[i][kOccupied] )) { --kOccupied; }  // find occupied slot above empty slot (may not found)
+            while (kOccupied >= 0 && !this.isDot( this.tableOfTypes[i][kOccupied] )) { --kOccupied; }   // find occupied slot above empty slot (may not found)
             if (kOccupied >= 0 && kEmpty >= 0) { // fact: kOccupied != kEmpty
                 // move dot to empty slot
                 /** @type Phaser.Sprite */ var dot = this.tableOfDots[i][kOccupied];
@@ -207,6 +224,8 @@ Battle.prototype.spawnDots = function (excludeType) {
                 this.tableOfDots[i][kEmpty]    = dot;
 
                 // update type matrix
+                // assert( this.isEmpty( this.tableOfTypes[i][kEmpty] ), 'slot[' + i + '][' + kEmpty + '] = ' + this.tableOfTypes[i][kEmpty] + ' => not empty' );
+                // assert( this.isDot( this.tableOfTypes[i][kOccupied] ), 'slot[' + i + '][' + kOccupied + '] = ' + this.tableOfTypes[i][kOccupied] + ' => not a dot' );
                 this.tableOfTypes[i][kEmpty]    = this.tableOfTypes[i][kOccupied];
                 this.tableOfTypes[i][kOccupied] = this.EMPTY;
 
@@ -230,34 +249,50 @@ Battle.prototype.spawnDots = function (excludeType) {
         var countNewDots = kEmpty + 1;
         var duration     = this.FALL_1_FLOOR_DURATION * countNewDots;
         while (kEmpty >= 0) {
-            // Get new dot
-            // Don't need to have /** @type */ before 'var', because 'getDotFromPool' specified return type
-            /** @type Phaser.Sprite */ var dot = this.getDotFromPool();
-            dot.position.set( this.colToX( i ), this.rowToY( kEmpty - countNewDots ) );
+            if (this.isEmpty( this.tableOfTypes[i][kEmpty] )) {
+                // Don't need to have /** @type */ before 'var', because 'getDotFromPool' specified return type
+                /** @type Phaser.Sprite */ var dot = this.getDotFromPool();
+                dot.position.set( this.colToX( i ), this.rowToY( kEmpty - countNewDots ) );
 
-            // save position & type
-            var dotType                  = Phaser.ArrayUtils.getRandomItem( availableColors );
-            this.tableOfDots[i][kEmpty]  = dot;
-            this.tableOfTypes[i][kEmpty] = dotType;
-            dot.tint                     = this.COLORS[ dotType - 1 ];
+                // save position & type
+                var dotType                  = Phaser.ArrayUtils.getRandomItem( availableColors );
+                this.tableOfDots[i][kEmpty]  = dot;
+                this.tableOfTypes[i][kEmpty] = dotType;
+                dot.tint                     = this.COLORS[ dotType - 1 ];
 
-            // tween
-            if (this.USE_TWEEN_POOL) {
-                this.getTweenFor( dot )
-                    .to( {y: this.rowToY( kEmpty )}, duration, Phaser.Easing.Bounce.Out, true);
-            } else {
-                this.add.tween(dot)
-                    .to( {y: this.rowToY( kEmpty )}, duration, Phaser.Easing.Bounce.Out, true);
+                // tween
+                if (this.USE_TWEEN_POOL) {
+                    this.getTweenFor( dot )
+                        .to( {y: this.rowToY( kEmpty )}, duration, Phaser.Easing.Bounce.Out, true);
+                } else {
+                    this.add.tween(dot)
+                        .to( {y: this.rowToY( kEmpty )}, duration, Phaser.Easing.Bounce.Out, true);
+                }
             }
+            // else { console.log( 'Hole' ); }
             --kEmpty;
         }
         longestDuration = Math.max( duration, longestDuration );
     }
 
-    this.time.events.add( longestDuration, this.switchPhase, this, this.PHASE_ACTION );
+    this.time.events.add( longestDuration, this.postSpawn, this );
 
 //    console.log("after spawning");
 //    this.poolOfDots.debug();
+};
+//-----------------------------------------------------------------------------------------------------------
+/**
+ * [GRAPHIC]
+ * Post-spawning: Check if player can match dots or not.
+ * If he stucks, shuffle the dots to ensure he can match.
+ */
+Battle.prototype.postSpawn = function () {
+    if (this.canMatch()) {
+        this.switchPhase( this.PHASE_ACTION );
+    } else {
+        console.warn( 'Need shuffling' );
+        this.shuffleForPossibleMove();
+    }
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
@@ -383,6 +418,22 @@ Battle.prototype.isEmpty = function (t) {
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
+ * @param t : Dot type in this slot
+ * @returns Check if this slot is a hole or not
+ */
+Battle.prototype.isHole = function (t) {
+    return (t == this.HOLE);
+};
+//-----------------------------------------------------------------------------------------------------------
+/**
+ * @param t : Dot type in this slot
+ * @returns Check if this slot contains a dot or not
+ */
+Battle.prototype.isDot = function (t) {
+    return !this.isEmpty( t ) && !this.isHole( t );
+};
+//-----------------------------------------------------------------------------------------------------------
+/**
  * [INPUT] On mouse down
  */
 Battle.prototype.onGrab = function () {
@@ -449,7 +500,7 @@ Battle.prototype.render = function () {
         var offsetY = this.cachedStageY + this.DOT_SIZE / 2;
         for (var i = 0; i < this.GRID_WIDTH; ++i) {
             for (var k = 0; k < this.GRID_HEIGHT; ++k) {
-                if (!this.isEmpty( this.tableOfTypes[i][k] )) {
+                if (this.isDot( this.tableOfTypes[i][k] )) {
                     this.debug.text(
                         this.tableOfTypes[i][k],
                         offsetX + this.tableOfDots[i][k].x,
@@ -477,7 +528,7 @@ Battle.prototype.render = function () {
  */
 Battle.prototype.onTouch = function (col, row) {
     var type = this.tableOfTypes[col][row];
-    if (this.isEmpty( type )) { return; }
+    if (!this.isDot( type )) { return; }
 
     // Case 1: Set as 1st dot---------------------------------------------
     var index = this.colRowToIndex( col, row );
@@ -560,6 +611,9 @@ Battle.prototype.matchDots = function () {
         this.sfx( 'match' );
     }
     this.animateAvatarOnMatch( this.isSquareFormed );
+
+    ++this.countMoves;
+    console.log( "Moves left = " + (this.currentLevelSettings.moves - this.countMoves) );
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
@@ -583,6 +637,7 @@ Battle.prototype.clear = function (indices) {
         var c   = this.indexToCol( id );
         var r   = this.indexToRow( id );
 
+        // assert( this.isDot( this.tableOfTypes[c][r] ), 'slot[' + c + '][' + r + '] = ' + this.tableOfTypes[c][r] + ' => not a dot' );
         this.tableOfTypes[c][r] = this.EMPTY;
         dots.push( this.tableOfDots[c][r] );
 
@@ -597,6 +652,11 @@ Battle.prototype.clear = function (indices) {
         this.showParticleAt( id, color );
     }
     this.time.events.add( this.DOT_ANIM_DURATION, this.postClear, this, dots );
+
+    if ( color == this.requiredColor ) {
+        this.countClear += indices.length;
+        console.log( "Collected: " + this.countClear + "/" + this.currentLevelSettings.target );
+    }
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
@@ -713,7 +773,7 @@ Battle.prototype.onDisconnectDot = function (dotIndex, lastDotIndex) {
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
- * 
+ *
  */
 Battle.prototype.initSquareIndicator = function () {
     this.hideSquareIndicator();
@@ -723,7 +783,7 @@ Battle.prototype.initSquareIndicator = function () {
     tween.pause();
     tween.onLoop.add( this._onSquareIndicatorLoop, this );
     this.fSquareIndicator.data = { tween : tween };
-    
+
     // TODO: Can't restart tween now -> Trick: Repeat tween infinitely, but pause after each loop, then resume later
 };
 //-----------------------------------------------------------------------------------------------------------
@@ -925,7 +985,7 @@ Battle.prototype.stopTweensOf = function (obj, complete) {
  */
 Battle.prototype.initConnectFxs = function () {
     if (!this.FX_CONNECT_ENABLE) { return; }
-    
+
     var particlesGroup = this.fParticlesGroup;
     for (var i = 0; i < this.GRID_WIDTH; ++i) {
         for (var k = 0; k < this.GRID_HEIGHT; ++k) {
@@ -936,19 +996,19 @@ Battle.prototype.initConnectFxs = function () {
             fx.anchor.set( 0.5 );
             fx.visible = false;
             fx.name = 'fx_connect_' + id;
-            
+
             // Create tweens (NOT auto-start)
             /** @type Phaser.Tween */var tweenScale = this.add.tween( fx.scale )
                 .to( { x : 3, y : 3 }, this.HIGHLIGHT_DURATION, Phaser.Easing.Cubic.Out, true ).loop();
             tweenScale.pause();
             tweenScale.onLoop.add( this._hideConnectFx, this );
-            
+
             /** @type Phaser.Tween */var tweenAlpha = this.add.tween( fx )
                 .to( { alpha : 0 }, this.HIGHLIGHT_DURATION, Phaser.Easing.Cubic.Out, true ).loop();
             tweenAlpha.pause();
             tweenAlpha.onLoop.add( this._hideConnectFx, this );
             // don't use 'addOnce', because I want this callback to be executed everytime tween finishes
-            
+
             this.mapOfConnectFxs[ id ] = {
                 sprite : fx,
                 tweens : [ tweenScale, tweenAlpha ]
@@ -966,7 +1026,7 @@ Battle.prototype.showConnectFxAt = function (c, r) {
     var fx = this.mapOfConnectFxs[ this.colRowToIndex(c, r) ];
     fx.sprite.tint     = this.COLORS[ this.connectingType - 1 ];
     fx.sprite.visible  = true;
-    
+
     fx.tweens[0].resume();
     fx.tweens[1].resume();
 };
@@ -1038,4 +1098,123 @@ Battle.prototype.switchPhase = function (p) {
 Battle.prototype.toMenuState = function () {
 //    this.state.start( 'Menu', FadeOut, FadeIn ); // TODO: Not smooth enough, think of camera fading
     this.state.start( 'Menu' );
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.canMatch = function () {
+    for (var i = 0; i < this.GRID_WIDTH; ++i) {
+        for (var k = 0; k < this.GRID_HEIGHT; ++k) {
+            var c = this.tableOfTypes[i][k];
+            if (!this.isDot( c )) {
+                continue;
+            }
+
+            if (this.isOnBoard(i, k - 1) && c == this.tableOfTypes[i][k - 1]) {
+                return true;
+            }
+            if (this.isOnBoard(i, k + 1) && c == this.tableOfTypes[i][k + 1]) {
+                return true;
+            }
+            if (this.isOnBoard(i - 1, k) && c == this.tableOfTypes[i - 1][k]) {
+                return true;
+            }
+            if (this.isOnBoard(i + 1, k) && c == this.tableOfTypes[i + 1][k]) {
+                return true;
+            }
+        }
+    }
+    return false;
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.shuffleForPossibleMove = function () {
+    // Convert a table to a list to shuffle
+    var canMatch    = false;
+    var slots       = [];
+    var slotIndices = [];
+    for (var i = 0; i < this.GRID_WIDTH; ++i) {
+        for (var k = 0; k < this.GRID_HEIGHT; ++k) {
+            if (this.isDot( this.tableOfTypes[i][k] )) {
+                slots.push( this.tableOfTypes[i][k] );
+                slotIndices.push( this.colRowToIndex( i, k ) );
+                // dot @ slotIndices[x] = slots[x]
+                // slotIndices  will stay unchanged
+                // slots        will be shuffled
+            }
+        }
+    }
+
+    // Shuffle for several times
+    for (var i = 0; (i < this.MAX_SHUFFLE_TRY) && !canMatch; ++i) {
+        this._shuffle( slotIndices, slots );
+        canMatch = this.canMatch();
+        console.warn( '\tSHUFFLE: Try #' + (i + 1) + ' => can match? ' + canMatch );
+    }
+
+    // Invalidate after shuffling successfully, or create a new board
+    if (canMatch) {
+        // this.invalidateBoard();
+        // this.switchPhase( this.PHASE_ACTION );
+        this.invalidateBoardAfterShuffling();
+    } else {
+        this.resetTableOfTypes();
+        this.spawnDots();
+    }
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype._shuffle = function (slotIndices, slots) {
+    slots = shuffle( slots );
+    for (var i = slots.length - 1; i >= 0; i--) {
+        var c = this.indexToCol( slotIndices[i] );
+        var r = this.indexToRow( slotIndices[i] );
+        this.tableOfTypes[c][r] = slots[i];
+    }
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.invalidateBoard = function () {
+    for (var i = 0; i < this.GRID_WIDTH; ++i) {
+        for (var k = 0; k < this.GRID_HEIGHT; ++k) {
+            if (this.isDot( this.tableOfTypes[i][k] )) {
+                this.tableOfDots[i][k].tint = this.COLORS[ this.tableOfTypes[i][k] - 1 ];
+            }
+        }
+    }
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.invalidateBoardAfterShuffling = function () {
+    var duration = this.SHUFFLE_DURATION;
+    var x = this.game.world.centerX - this.fDotsGroup.x;
+    var y = this.game.world.centerY - this.fDotsGroup.y;
+
+    // Move dots to center then back to old position
+    for (var i = 0; i < this.GRID_WIDTH; ++i) {
+        for (var k = 0; k < this.GRID_HEIGHT; ++k) {
+            if (!this.isDot( this.tableOfTypes[i][k] )) {
+                continue;
+            }
+            var d = Math.floor(Math.random() * (duration - 200) + 200);
+            this.tweens.remove( this.tableOfDots[i][k] );
+            this.add.tween( this.tableOfDots[i][k] )
+                .to( {x : x}, d, Phaser.Easing.Sinusoidal.Out, true)
+                .yoyo( true, duration - d );
+            this.add.tween( this.tableOfDots[i][k] )
+                .to( {y : y}, d, Phaser.Easing.Linear.None, true) // different easing for x, y make curve
+                .yoyo( true, duration - d );
+        }
+    }
+
+    // When dots are in center, swap their colors
+    this.time.events.add( duration, this.invalidateBoard, this );
+
+    // When dots are back to their positions, enable user interaction
+    this.time.events.add( duration * 2, this.switchPhase, this, this.PHASE_ACTION );
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.resetTableOfTypes = function () {
+    this.tableOfTypes = [
+        [   0,  0,  0,  0,  0,  0   ],
+        [   0, -1,  0,  0,  0,  0   ],
+        [   0,  0,  0,  0,  0,  0   ],
+        [   0,  0,  0,  0,  0,  0   ],
+        [   0,  0,  0,  0, -1, -1   ],
+        [   0,  0,  0,  0, -1,  0   ]
+    ];
 };

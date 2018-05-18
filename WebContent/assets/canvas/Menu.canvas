@@ -19,7 +19,7 @@
       200
     ],
     "showGrid": true,
-    "create_after": "//--Generated code from canvas user code\n// Play BGM (looped) and prevent playing multiple BGMs when switch to this state again\nif (this.game.data.bgm == '') {\n\tthis.add.sound( 'bgm1', 0.5, true ).play();\n\tthis.game.data.bgm = 'bgm1';\n}\n\n// Debug\nvar at = getPlugin( Phaser.Plugin.AdvancedTiming );\nif (at) {\n\tat.mode = 'graph';\n}"
+    "create_after": "//--Generated code from canvas user code\n// Play BGM (looped) and prevent playing multiple BGMs when switch to this state again\nif (this.game.data.bgm == '') {\n\tthis.add.sound( 'bgm1', 0.5, true ).play();\n\tthis.game.data.bgm = 'bgm1';\n}\n\n// Debug\nvar at = getPlugin( Phaser.Plugin.AdvancedTiming );\nif (at) {\n\tat.mode = 'graph';\n}\n\nconsole.log( \"You can use 'game.state.getCurrentState().toBattleStateWithLv( 10 )' to jump to Lv. 10\" );"
   },
   "stateSettings": {
     "stageBackgroundColor": [
@@ -27,7 +27,7 @@
       0,
       0
     ],
-    "autoLoad": true,
+    "autoLoad": false,
     "preloadSpriteId": "",
     "preloadSprite_direction": 0,
     "load.pack": []
@@ -41,7 +41,7 @@
       "children": [
         {
           "type": "image",
-          "id": "0dfecc01-dc1e-4132-b7e4-f90a851ccb3d",
+          "id": "fe07243a-cbe3-4838-a652-bcaa61d05d91",
           "asset": "0",
           "info": {
             "editorName": "bg",
@@ -50,7 +50,7 @@
         },
         {
           "type": "button",
-          "id": "384b1f61-8b84-4d4c-9f38-5c2cd7c62ac6",
+          "id": "d598d513-92ce-4bf1-b755-87d3ffacbbaa",
           "asset": "1",
           "info": {
             "editorName": "btnStartBg",
@@ -83,12 +83,12 @@
   "asset-table": {
     "0": {
       "file": "WebContent/assets/pack.json",
-      "section": "pack1",
+      "section": "battle",
       "asset": "bg"
     },
     "1": {
       "file": "WebContent/assets/pack.json",
-      "section": "pack1",
+      "section": "battle",
       "asset": "all-images",
       "sprite": "line"
     }

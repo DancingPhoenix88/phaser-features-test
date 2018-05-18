@@ -42,7 +42,7 @@
       "children": [
         {
           "type": "image",
-          "id": "db78caa3-1500-4186-9ad0-77a11da9b736",
+          "id": "819956de-67f8-410e-9caf-9264820f0dbf",
           "asset": "0",
           "info": {
             "editorName": "bg",
@@ -51,7 +51,7 @@
         },
         {
           "type": "atlas-sprite",
-          "id": "0b153a4e-584b-468e-b479-246e5dc79379",
+          "id": "36f0be39-261f-43a0-aae7-9f85afebf6d2",
           "asset": "1",
           "info": {
             "editorName": "stage",
@@ -113,7 +113,7 @@
             "children": [
               {
                 "type": "button",
-                "id": "7f42b2f8-146f-492f-96b2-7688705d9068",
+                "id": "2f00a26f-b38d-4382-8a50-4674100dcdd4",
                 "asset": "2",
                 "info": {
                   "editorName": "btnBackBg",
@@ -144,7 +144,7 @@
         },
         {
           "type": "atlas-sprite",
-          "id": "fae1766c-1126-4baa-a42b-575da3a4c9df",
+          "id": "98cb1fd9-fb90-45ff-bda0-a1ef3c92d6e5",
           "asset": "3",
           "info": {
             "editorName": "squareIndicator",
@@ -166,24 +166,24 @@
   "asset-table": {
     "0": {
       "file": "WebContent/assets/pack.json",
-      "section": "pack1",
+      "section": "battle",
       "asset": "bg"
     },
     "1": {
       "file": "WebContent/assets/pack.json",
-      "section": "pack1",
+      "section": "battle",
       "asset": "all-images",
       "sprite": "stage"
     },
     "2": {
       "file": "WebContent/assets/pack.json",
-      "section": "pack1",
+      "section": "battle",
       "asset": "all-images",
       "sprite": "line"
     },
     "3": {
       "file": "WebContent/assets/pack.json",
-      "section": "pack1",
+      "section": "battle",
       "asset": "all-images",
       "sprite": "dot"
     }

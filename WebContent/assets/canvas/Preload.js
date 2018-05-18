@@ -38,7 +38,7 @@ Preload.prototype.preload = function () {
 	addOptionalPlugin( Phaser.Plugin.Debug );
 	addOptionalPlugin( Phaser.Plugin.Inspector );
 	
-	this.load.pack('pack1', 'assets/pack.json');
+	this.load.pack('battle', 'assets/pack.json');
 	
 	
 	var _progress_bar = this.add.sprite(100.0, 405.0, 'progress-bar');
