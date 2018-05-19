@@ -10,9 +10,9 @@
  * Battle.
  */
 function Battle() {
-	
+
 	Phaser.State.call(this);
-	
+
 }
 
 /** @type Phaser.State */
@@ -21,68 +21,150 @@ Battle.prototype = Battle_proto;
 Battle.prototype.constructor = Battle;
 
 Battle.prototype.init = function () {
-	
+
 };
 
 Battle.prototype.preload = function () {
-	
+
 	//--Generated custom load (from user canvas code)
 	this.load.customPack( 'custom_pack', 'customBattle' );
-	
+
 };
 
 Battle.prototype.create = function () {
 	var _bg = this.add.sprite(0.0, 0.0, 'bg');
 	_bg.name = 'bg';
-	
+
 	var _stage = this.add.sprite(69.0, 244.0, 'all-images', 'stage');
 	_stage.name = 'stage';
 	_stage.alpha = 0.8;
-	
+
 	var _linesGroup = this.add.group();
 	_linesGroup.name = 'linesGroup';
 	_linesGroup.position.setTo(79.0, 254.0);
-	
+
 	var _dotsGroup = this.add.group();
 	_dotsGroup.name = 'dotsGroup';
 	_dotsGroup.position.setTo(79.0, 254.0);
-	
+
 	var _particlesGroup = this.add.group();
 	_particlesGroup.name = 'particlesGroup';
 	_particlesGroup.position.setTo(79.0, 254.0);
-	
-	var _btnBack = this.add.group();
+
+	var _uiGroup = this.add.group();
+	_uiGroup.name = 'UI';
+	_uiGroup.fixedToCamera = true;
+
+	var _panelGoal = this.add.group(_uiGroup);
+	_panelGoal.name = 'panelGoal';
+	_panelGoal.position.setTo(163.0, 14.0);
+
+	var _bgGoal = this.add.sprite(0.0, 0.0, 'all-images', 'line', _panelGoal);
+	_bgGoal.name = 'bgGoal';
+	_bgGoal.scale.setTo(1.55, 5.0);
+	_bgGoal.alpha = 0.4;
+
+	var _imgDotGoal = this.add.sprite(8.0, 10.0, 'all-images', 'dot', _panelGoal);
+	_imgDotGoal.name = 'imgDotGoal';
+
+	var _txtGoal = this.add.text(45.0, 12.0, '99', {"font":"bold 24px Arial","fill":"#ffffff","align":"center"}, _panelGoal);
+	_txtGoal.name = 'txtGoal';
+
+	var _panelMove = this.add.group(_uiGroup);
+	_panelMove.name = 'btnBack';
+	_panelMove.position.setTo(23.0, 14.0);
+
+	var _bgMove = this.add.sprite(0.0, 0.0, 'all-images', 'line', _panelMove);
+	_bgMove.name = 'bgMove';
+	_bgMove.scale.setTo(2.5, 5.0);
+	_bgMove.alpha = 0.8;
+
+	var _labelMove = this.add.text(9.0, 15.0, 'MOVES', {"font":"16px Arial","fill":"#666666","align":"center"}, _panelMove);
+	_labelMove.name = 'labelMove';
+
+	var _txtMove = this.add.text(79.0, 5.0, '99', {"font":"bold 32px Arial","fill":"#333333","align":"center"}, _panelMove);
+	_txtMove.name = 'txtMove';
+
+	var _btnBack = this.add.group(_uiGroup);
 	_btnBack.name = 'btnBack';
-	_btnBack.fixedToCamera = true;
-	
+	_btnBack.position.setTo(-17.0, 9.0);
+
 	var _btnBackBg = this.add.button(360.0, 8.0, 'all-images', this.toMenuState, this, null, 'line', null, null, _btnBack);
 	_btnBackBg.name = 'btnBackBg';
 	_btnBackBg.scale.setTo(1.7, 4.0);
 	_btnBackBg.alpha = 0.9;
-	
+
 	var _btnBackText = this.add.text(376.0, 16.0, 'BACK', {"font":"bold 20px Arial","fill":"#9e627c","align":"center"}, _btnBack);
 	_btnBackText.name = 'btnBackText';
-	
+
+	var _modalBg = this.add.button(-35.0, -25.0, 'all-images', null, this, null, 'line', null, null, _uiGroup);
+	_modalBg.name = 'modalBg';
+	_modalBg.scale.setTo(10.0, 85.0);
+	_modalBg.alpha = 0.8;
+	_modalBg.renderable = false;
+	_modalBg.tint = 0x191919;
+
+	var _modalWin = this.add.group(_uiGroup);
+	_modalWin.name = 'modalWin';
+	_modalWin.position.setTo(69.00001525878906, 300.0);
+
+	var _bgWin = this.add.sprite(0.0, 0.0, 'all-images', 'line', _modalWin);
+	_bgWin.name = 'bgWin';
+	_bgWin.scale.setTo(6.0, 20.0);
+	_bgWin.alpha = 0.8;
+
+	var _labelWin = this.add.text(79.0, 29.0, 'Mission Complete', {"font":"20px Arial","fill":"#008000","align":"center"}, _modalWin);
+	_labelWin.name = 'labelWin';
+
+	var _txtLvWin = this.add.text(124.0, 74.0, '99', {"font":"bold 64px Arial","fill":"#408000","align":"center"}, _modalWin);
+	_txtLvWin.name = 'txtLvWin';
+
+	var _modalLose = this.add.group(_uiGroup);
+	_modalLose.name = 'modalLose';
+	_modalLose.position.setTo(69.0, 300.0);
+
+	var _bgLose = this.add.sprite(0.0, 0.0, 'all-images', 'line', _modalLose);
+	_bgLose.name = 'bgLose';
+	_bgLose.scale.setTo(6.0, 20.0);
+	_bgLose.alpha = 0.8;
+
+	var _labelLose = this.add.text(99.0, 29.0, 'Mission Failed', {"font":"20px Arial","fill":"#800040","align":"center"}, _modalLose);
+	_labelLose.name = 'labelLose';
+
+	var _txtLvLose = this.add.text(124.0, 74.0, '99', {"font":"bold 64px Arial","fill":"#800040","align":"center"}, _modalLose);
+	_txtLvLose.name = 'txtLvLose';
+
 	var _squareIndicator = this.add.sprite(210.0, 385.0, 'all-images', 'dot');
 	_squareIndicator.name = 'squareIndicator';
 	_squareIndicator.scale.setTo(40.0, 40.0);
 	_squareIndicator.alpha = 0.2;
 	_squareIndicator.anchor.setTo(0.5, 0.5);
-	
-	
-	
+
+	_modalWin.setAll("visible", false);
+	_modalLose.setAll("visible", false);
+
+
 	// public fields
-	
+
 	this.fStage = _stage;
 	this.fLinesGroup = _linesGroup;
 	this.fDotsGroup = _dotsGroup;
 	this.fParticlesGroup = _particlesGroup;
+	this.fUiGroup = _uiGroup;
+	this.fImgDotGoal = _imgDotGoal;
+	this.fTxtGoal = _txtGoal;
+	this.fTxtMove = _txtMove;
+	this.fModalBg = _modalBg;
+	this.fModalWin = _modalWin;
+	this.fTxtLvWin = _txtLvWin;
+	this.fModalLose = _modalLose;
+	this.fTxtLvLose = _txtLvLose;
 	this.fSquareIndicator = _squareIndicator;
-	
+
 	//--Generated code from canvas user code
 	this.makeBitmapTextFrom( _btnBackText, 'NUnito', true );
 	this.initStage();
-	
+
 };
 
 /* --- end generated code --- */
@@ -107,6 +189,9 @@ Battle.prototype.PHASES                 = ["ACTION", "Wait..."];
 Battle.prototype.PHASE_ACTION           = 0;
 Battle.prototype.PHASE_WAIT             = 1;
 Battle.prototype.MAX_SHUFFLE_TRY        = 5;
+Battle.prototype.RESULT_IN_PROGRESS     = 0;
+Battle.prototype.RESULT_WIN             = 1;
+Battle.prototype.RESULT_LOSE            = 2;
 //-----------------------------------------------------------------------------------------------------------
 // CONFIG
 Battle.prototype.DEBUG_ENABLE           = false;
@@ -180,8 +265,9 @@ Battle.prototype.initStage = function () {
     this.currentLevelSettings   = this.game.data.level.getLevel( this.game.data.userLevel );
     this.colorsInLevel          = this.currentLevelSettings.colors;
     this.requiredColor          = Phaser.ArrayUtils.getRandomItem( this.colorsInLevel );
-    console.log( this.currentLevelSettings );
+    console.log( 'LEVEL ' + this.game.data.userLevel, this.currentLevelSettings );
     console.log( '%c Required color = ' + this.requiredColor, 'background: #' + this.COLORS[ this.requiredColor - 1 ].toString(16) + '; color: #000' );
+    this.initUI();
 
     // Move dots from poolOfDots to tableOfDots
     this.spawnDots();
@@ -288,6 +374,15 @@ Battle.prototype.spawnDots = function (excludeType) {
  * If he stucks, shuffle the dots to ensure he can match.
  */
 Battle.prototype.postSpawn = function () {
+    var result = this.checkWin();
+    if (result == this.RESULT_WIN) {
+        this.onWin();
+        return;
+    } else if (result == this.RESULT_LOSE) {
+        this.onLose();
+        return;
+    }
+
     if (this.canMatch()) {
         this.switchPhase( this.PHASE_ACTION );
     } else {
@@ -615,6 +710,7 @@ Battle.prototype.matchDots = function () {
 
     ++this.countMoves;
     console.log( "Moves left = " + (this.currentLevelSettings.moves - this.countMoves) );
+    this.invalidateUI();
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
@@ -888,6 +984,9 @@ Battle.prototype.initAnimations = function () {
     this.avatar.scale.set( 0.3 );
     this.avatar.setAnimationByName( 0, 'idle', true );
     this.avatar.name = 'avatar'; // to view in Phaser.Plugin.Debug.SceneTree
+
+    // Move spine under UI
+    this.world.setChildIndex( this.avatar, this.world.getChildIndex( this.fUiGroup ) );
 };
 //-----------------------------------------------------------------------------------------------------------
 /**
@@ -1218,4 +1317,86 @@ Battle.prototype.resetTableOfTypes = function () {
         [   0,  0,  0,  0, -1, -1   ],
         [   0,  0,  0,  0, -1,  0   ]
     ];
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.initUI = function () {
+    this.updateRequiredColorUI();
+    this.invalidateUI();
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.invalidateUI = function () {
+    this.fTxtMove.text = Math.max(0, this.currentLevelSettings.moves - this.countMoves).toString();
+    this.fTxtGoal.text = Math.max(0, this.currentLevelSettings.target - this.countClear).toString();
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.updateRequiredColorUI = function () {
+    this.fImgDotGoal.tint = this.COLORS[ this.requiredColor - 1 ];
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.checkWin = function () {
+    if (this.countClear >= this.currentLevelSettings.target) {
+        return this.RESULT_WIN;
+    } else if (this.countMoves < this.currentLevelSettings.moves) {
+        return this.RESULT_IN_PROGRESS;
+    } else {
+        return this.RESULT_LOSE;
+    }
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.onWin = function (isDebug) {
+    console.log( "WIN" );
+    var duration = 500;
+    var delay    = 2000;
+
+    // Modal
+    this.fModalBg.renderable = true;
+    this.add.tween( this.fModalBg )
+        .from( { alpha : 0 }, duration, Phaser.Easing.Quadratic.Out, true );
+
+    // Panel WIN content
+    this.fTxtLvWin.text = this.game.data.userLevel.toString();
+
+    // Panel WIN
+    this.fModalWin.setAll( 'visible', true );
+    this.add.tween( this.fModalWin )
+        .from( { y : -300 }, duration, Phaser.Easing.Bounce.Out, true );
+
+    // Delay next level action
+    if (isDebug != true) {
+        this.time.events.add( delay, this.postWin, this );
+    }
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.postWin = function () {
+    if (this.game.data.userLevel < this.game.data.level.getMaxLevel()) {
+        ++this.game.data.userLevel;
+        this.state.restart();
+    } else {
+        console.warn( "You've just finished the game !!!" );
+        this.toMenuState();
+    }
+};
+//-----------------------------------------------------------------------------------------------------------
+Battle.prototype.onLose = function (isDebug) {
+    console.log( "LOSE" );
+    var duration = 500;
+    var delay    = 2000;
+
+    // Modal
+    this.fModalBg.renderable = true;
+    this.add.tween( this.fModalBg )
+        .from( { alpha : 0 }, duration, Phaser.Easing.Quadratic.Out, true );
+
+    // Panel LOSE content
+    this.fTxtLvLose.text = this.game.data.userLevel.toString();
+
+    // Panel LOSE
+    this.fModalLose.setAll( 'visible', true );
+    this.add.tween( this.fModalLose )
+        .from( { y : -300 }, duration, Phaser.Easing.Bounce.Out, true );
+
+    // Delay next level action
+    if (isDebug != true) {
+        this.time.events.add( delay, this.toMenuState, this );
+    }
 };
