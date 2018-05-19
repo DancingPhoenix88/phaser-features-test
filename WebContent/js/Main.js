@@ -180,6 +180,7 @@ Phaser.Cache.prototype.processBitmapFontData = function (fontName, dataKey, imag
 };
 //-----------------------------------------------------------------------------------------------------------
 Phaser.Loader.prototype.customPack = function (pack, section, callback, context) {
+    // TODO: How to prevent re-loading this pack
     console.log( 'custom loading pack ' + pack + '.' + section );
     var packContent = this.cache.getJSON( pack );
     if (packContent && packContent[section]) {
@@ -193,11 +194,17 @@ Phaser.Loader.prototype.customPack = function (pack, section, callback, context)
 Phaser.Loader.prototype.customFile = function (file) {
     switch (file.type) {
         case 'spine': {
+            if (this.cache.checkTextKey( file.key + 'Atlas' )) {
+                return false;
+            }
             console.log( 'custom loading spine ', file );
             this.spine( file.key, file.url, file.scales );
             return true;
         }
         case 'mergedBitmapFont': {
+            if (this.cache.checkBitmapFontKey( file.key )) {
+                return false;
+            }
             console.log( 'custom loading merged bitmap font  ', file );
             if (file.singleFontInData) {
                 this.cache.processBitmapFontData( file.key, file.dataKey, file.textureKey, file.xSpacing, file.ySpacing );
