@@ -56,16 +56,18 @@ Menu.prototype.create = function () {
 	
 	console.log( "You can use 'game.state.getCurrentState().toBattleStateWithLv( 10 )' to jump to Lv. 10" );
 	
+	this.makeBitmapTextFrom( _btnStartText, 'NUnito', true );
+	
 };
 
 /* --- end generated code --- */
 // -- user code here --
-
+//-----------------------------------------------------------------------------------------------------------
 Menu.prototype.toBattleState = function () {
     this.game.data.userLevel = 1;
     this.state.start( 'Battle', FadeOut, FadeIn );
 };
-
+//-----------------------------------------------------------------------------------------------------------
 Menu.prototype.toBattleStateWithLv = function (lv) {
     this.game.data.userLevel = lv;
     this.state.start( 'Battle', FadeOut, FadeIn );

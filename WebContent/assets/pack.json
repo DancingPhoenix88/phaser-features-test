@@ -31,13 +31,6 @@
       "autoDecode": true
     },
     {
-      "type": "atlas",
-      "key": "all-images",
-      "textureURL": "assets/sprites/all-images.png",
-      "atlasURL": "assets/sprites/all-images.json",
-      "format": "TEXTURE_ATLAS_JSON_HASH"
-    },
-    {
       "type": "image",
       "key": "bg",
       "url": "assets/sprites/bg.jpg",
@@ -54,6 +47,25 @@
       "key": "levels",
       "url": "assets/data/levels.json",
       "overwrite": false
+    },
+    {
+      "type": "atlas",
+      "key": "all-images",
+      "textureURL": "assets/sprites/fNUnito-sBattle.png",
+      "atlasURL": "assets/sprites/fNUnito-sBattle.json",
+      "format": "TEXTURE_ATLAS_JSON_ARRAY"
+    },
+    {
+      "type": "xml",
+      "key": "font-NUnito-data",
+      "url": "assets/sprites/NUnito.fnt",
+      "overwrite": false
+    },
+    {
+      "type": "json",
+      "key": "custom_pack",
+      "url": "assets/data/custom_pack.json",
+      "overwrite": false
     }
   ],
   "preload": [{
@@ -63,7 +75,7 @@
     "overwrite": false
   }],
   "meta": {
-    "generated": "1526576104457",
+    "generated": "1526670539568",
     "app": "Phaser Editor",
     "url": "http://phasereditor.boniatillo.com",
     "version": "1.0",

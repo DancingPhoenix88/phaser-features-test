@@ -19,7 +19,7 @@
       200
     ],
     "showGrid": true,
-    "create_after": "//--Generated code from canvas user code\n// Play BGM (looped) and prevent playing multiple BGMs when switch to this state again\nif (this.game.data.bgm == '') {\n\tthis.add.sound( 'bgm1', 0.5, true ).play();\n\tthis.game.data.bgm = 'bgm1';\n}\n\n// Debug\nvar at = getPlugin( Phaser.Plugin.AdvancedTiming );\nif (at) {\n\tat.mode = 'graph';\n}\n\nconsole.log( \"You can use 'game.state.getCurrentState().toBattleStateWithLv( 10 )' to jump to Lv. 10\" );"
+    "create_after": "//--Generated code from canvas user code\n// Play BGM (looped) and prevent playing multiple BGMs when switch to this state again\nif (this.game.data.bgm == '') {\n\tthis.add.sound( 'bgm1', 0.5, true ).play();\n\tthis.game.data.bgm = 'bgm1';\n}\n\n// Debug\nvar at = getPlugin( Phaser.Plugin.AdvancedTiming );\nif (at) {\n\tat.mode = 'graph';\n}\n\nconsole.log( \"You can use 'game.state.getCurrentState().toBattleStateWithLv( 10 )' to jump to Lv. 10\" );\n\nthis.makeBitmapTextFrom( _btnStartText, 'NUnito', true );"
   },
   "stateSettings": {
     "stageBackgroundColor": [

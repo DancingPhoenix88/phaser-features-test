@@ -19,8 +19,8 @@
       200
     ],
     "showGrid": true,
-    "create_after": "\n//--Generated code from canvas user code\nthis.initStage();",
-    "state_preload_after": "//--Generated Spine load (from user canvas code)\nthis.load.spine( 'avatar', 'assets/animations/spineboy.json' );"
+    "create_after": "\n//--Generated code from canvas user code\nthis.makeBitmapTextFrom( _btnBackText, 'NUnito', true );\nthis.initStage();",
+    "state_preload_after": "//--Generated custom load (from user canvas code)\nthis.load.customPack( 'custom_pack', 'customBattle' );"
   },
   "stateSettings": {
     "stageBackgroundColor": [

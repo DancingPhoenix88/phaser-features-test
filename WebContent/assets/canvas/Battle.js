@@ -10,9 +10,9 @@
  * Battle.
  */
 function Battle() {
-
+	
 	Phaser.State.call(this);
-
+	
 }
 
 /** @type Phaser.State */
@@ -21,67 +21,68 @@ Battle.prototype = Battle_proto;
 Battle.prototype.constructor = Battle;
 
 Battle.prototype.init = function () {
-
+	
 };
 
 Battle.prototype.preload = function () {
-
-	//--Generated Spine load (from user canvas code)
-	this.load.spine( 'avatar', 'assets/animations/spineboy.json' );
-
+	
+	//--Generated custom load (from user canvas code)
+	this.load.customPack( 'custom_pack', 'customBattle' );
+	
 };
 
 Battle.prototype.create = function () {
 	var _bg = this.add.sprite(0.0, 0.0, 'bg');
 	_bg.name = 'bg';
-
+	
 	var _stage = this.add.sprite(69.0, 244.0, 'all-images', 'stage');
 	_stage.name = 'stage';
 	_stage.alpha = 0.8;
-
+	
 	var _linesGroup = this.add.group();
 	_linesGroup.name = 'linesGroup';
 	_linesGroup.position.setTo(79.0, 254.0);
-
+	
 	var _dotsGroup = this.add.group();
 	_dotsGroup.name = 'dotsGroup';
 	_dotsGroup.position.setTo(79.0, 254.0);
-
+	
 	var _particlesGroup = this.add.group();
 	_particlesGroup.name = 'particlesGroup';
 	_particlesGroup.position.setTo(79.0, 254.0);
-
+	
 	var _btnBack = this.add.group();
 	_btnBack.name = 'btnBack';
 	_btnBack.fixedToCamera = true;
-
+	
 	var _btnBackBg = this.add.button(360.0, 8.0, 'all-images', this.toMenuState, this, null, 'line', null, null, _btnBack);
 	_btnBackBg.name = 'btnBackBg';
 	_btnBackBg.scale.setTo(1.7, 4.0);
 	_btnBackBg.alpha = 0.9;
-
+	
 	var _btnBackText = this.add.text(376.0, 16.0, 'BACK', {"font":"bold 20px Arial","fill":"#9e627c","align":"center"}, _btnBack);
 	_btnBackText.name = 'btnBackText';
-
+	
 	var _squareIndicator = this.add.sprite(210.0, 385.0, 'all-images', 'dot');
 	_squareIndicator.name = 'squareIndicator';
 	_squareIndicator.scale.setTo(40.0, 40.0);
 	_squareIndicator.alpha = 0.2;
 	_squareIndicator.anchor.setTo(0.5, 0.5);
-
-
-
+	
+	
+	
 	// public fields
-
+	
 	this.fStage = _stage;
 	this.fLinesGroup = _linesGroup;
 	this.fDotsGroup = _dotsGroup;
 	this.fParticlesGroup = _particlesGroup;
 	this.fSquareIndicator = _squareIndicator;
-
+	
 	//--Generated code from canvas user code
+	this.makeBitmapTextFrom( _btnBackText, 'NUnito', true );
 	this.initStage();
-
+	
 };
 
 /* --- end generated code --- */

@@ -137,6 +137,35 @@ If you can form a square (or a rectangle), all dots with that color will disappe
   + Edit index.html to un-comment the <script> of cordova.js.
   + Edit config.xml and AndroidManifest.xml as guided on Version 2.
   + Build and run (not tested on iDevice yet)
+
+  
+## Version 4
++ **Bitmap font**
+    + Usually, your generated bitmap font will have a .fnt file and a .png file which contains all the letters.
+    + Here is the problem, bitmap font image is not packed in atlas -> break batch.
+    + So, if you want less draw call, you need to merge sprite with bitmap font.
+    + In theory, you can do that in Phaser, because bitmap = image + .fnt file to indicate position and size of letters. The generated .xml file calculated the position and size of letters when there're only font letters, not other images. So if we merge bitmap font letters with other sprites, we just need to re-calculate data in .fnt file.
+    + It can be your nightmare, but don't worry, some people faced that problem before and they got solution. YAY!
+    + Follow this [tutorial](http://sbcgamesdev.blogspot.cz/2016/03/phaser-tutorial-merging-fonts-into.html)
+        + Firstly, download the app (open .jar file)
+        + Import single sprites
+        + Import bitmap font (.xml and .fnt file should have same name)
+        + Change export format to 'JSON - Texture Packer' (you may need to resize the app to see this option)
+        + Click Optimize, then files you need is placed under export folder.
+        + Back to Phaser Editor, you can add atlas (.png and .json file) to pack, and you can add xml to pack too.
+        + Load xml separately in `preload` state, then create bitmap font by a special function (see `Main.js:addBitmapFontFromImage` & `Main.js:processBitmapFontData`).
+        + By this way, Phaser Editor can't detect a bitmap font, so that you can't make UI using bitmap font visually.
+        + So I add a function `makeBitmapTextFrom` to create new bitmap text object that copies properties from a normal text object. Then you can design your canvas using normal text, then replace it by bitmap text later (maybe not the best solution now).
+    + Other [tutorial](http://sbcgamesdev.blogspot.cz/2016/07/phaser-tutorial-fun-with-bitmap-fonts.html) about setting image as a letter of bitmap font
+    + Other [tutorial](http://sbcgamesdev.blogspot.com/2015/02/phaser-tutorial-how-to-wrap-bitmap-text.html) about wrapping bitmap text.
++ **Custom asset pack**
+    + Default asset pack only allow defined data type.
+    + Now we have 'spine' and 'mergedBitmapFont'.
+    + Currently, we load these assets manually, by editting canvas user code, which is inconvenient.
+    + So I make a `custom_pack.json` file copies `pack.json` structure and functions to process this custom pack.
+    + To use it, you add `custom_pack.json` in `pack.json` to know what's in the pack first.
+    + Next, when you want to load a 'section' of this custom pack, just use below command (spine and merged bitmap font will be handled automatically):
+    + > this.load.customPack( 'custom_pack', 'customBattle' );
   
 ## What's coming next ?
 + UI
