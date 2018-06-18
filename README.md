@@ -170,11 +170,15 @@ If you can form a square (or a rectangle), all dots with that color will disappe
     + To use it, you add `custom_pack.json` in `pack.json` to know what's in the pack first.
     + Next, when you want to load a 'section' of this custom pack, just use below command (spine and merged bitmap font will be handled automatically):
     + > this.load.customPack( 'custom_pack', 'customBattle' );
++ **Cordova plugin**
+    + Use [Cordova Plugin Screen Orientation](https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-screen-orientation/index.html) to lock orientation mode = Portrait, which is available in Phaser but doesn't work.
++ **UI**
+    + Use interval UI editor of Phaser Editor. Nothing worth mentioning.
++ **Spice things up**
+    + Update game logic to make "levels"
+    + Add more colors
+    + The game is really hard now
 
 ## What's coming next ?
-+ UI
-+ Bitmap Font
 + Local Storage
 + Weighted random
-+ More fun in game elements
-
