@@ -1,0 +1,20 @@
+{
+  "customBattle": [
+    {
+      "type": "spine",
+      "key": "avatar",
+      "url": "assets/animations/spineboy.json"
+    }
+  ],
+  "customCommon": [
+    {
+      "type": "mergedBitmapFont",
+      "key": "NUnito",
+      "dataKey": "font-NUnito-data",
+      "textureKey": "all-images",
+      "xSpacing": 0,
+      "ySpacing": 0,
+      "singleFontInData": true
+    }
+  ]
+}

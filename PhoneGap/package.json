@@ -1,0 +1,20 @@
+{
+  "name": "com.punch.phaserdemo2",
+  "version": "1.0.0",
+  "displayName": "DOTS Clone Wrapper",
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-device": {},
+      "cordova-plugin-screen-orientation": {}
+    }
+  },
+  "dependencies": {
+    "cordova-android": "7.0.0",
+    "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-screen-orientation": "^3.0.1",
+    "es6-promise-plugin": "^4.2.2"
+  }
+}

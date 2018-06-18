@@ -9,7 +9,11 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
-    <engine name="android" spec="~6.0.0" />
-    <preference name="Fullscreen" value="true" />
     <preference name="Orientation" value="portrait" />
+    <plugin name="cordova-plugin-device" spec="^2.0.2" />
+    <platform name="android">
+        <preference name="Fullscreen" value="true" />
+    </platform>
+    <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
+    <engine name="android" spec="7.0.0" />
 </widget>
