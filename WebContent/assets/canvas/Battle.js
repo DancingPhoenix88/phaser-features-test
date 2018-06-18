@@ -682,7 +682,7 @@ Battle.prototype.onTouch = function (col, row) {
             ++turnsCount;
         }
     } while (duplicatedPos < dotsCount - 1);
-    if (turnsCount < 4) {
+    if (turnsCount <= 4) {
         this.listOfConnectedDots.push( index );
         this.onConnectNewDot( index, lastDotIndex );
         console.log( "\t[SQUARE] Re-Add " + type + ": " + this.listOfConnectedDots );
