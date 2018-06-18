@@ -67,8 +67,8 @@ If you can form a square (or a rectangle), all dots with that color will disappe
   + You don't have a tool to preview / design particle effect in Phaser Editor.
   + So I need to check some other tools like:
     	+ [EPSy](http://labs.ezelia.com/epsy/)
-    	+ [Koreez's] (https://github.com/koreezgames/phaser-particle-editor-plugin)
-    	+ [PIXI] (https://github.com/pixijs/pixi-particles-editor)
+    	+ [Koreez's](https://github.com/koreezgames/phaser-particle-editor-plugin)
+    	+ [PIXI](https://github.com/pixijs/pixi-particles-editor)
   + In short, you can design particle effect with an online web tool, then export effect as JSON data, then use a plugin to load and display effect in the game.
   + But I couldn't make it work.
   + So I create a particle effect manually from code (using parameters from web tool :) )
