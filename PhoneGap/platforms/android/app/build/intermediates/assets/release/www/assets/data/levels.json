@@ -1,0 +1,139 @@
+{
+  "levels": [
+    {
+      "colors": ["Y", "R", "G", "B"],
+      "moves": 20,
+      "target": 20
+    },
+    {
+      "colors": ["Y", "R", "G", "B"],
+      "moves": 20,
+      "target": 40
+    },
+    {
+      "colors": ["W", "P", "G", "B"],
+      "moves": 20,
+      "target": 60
+    },
+    {
+      "colors": ["W", "P", "G", "B"],
+      "moves": 20,
+      "target": 80
+    },
+    {
+      "colors": ["Y", "R", "G", "B"],
+      "moves": 10,
+      "target": 40
+    },
+    {
+      "colors": ["Y", "R", "G", "B"],
+      "moves": 7,
+      "target": 40
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P"],
+      "moves": 20,
+      "target": 30
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P"],
+      "moves": 20,
+      "target": 60
+    },
+    {
+      "colors": ["R", "G", "B", "X", "W"],
+      "moves": 20,
+      "target": 90
+    },
+    {
+      "colors": ["R", "G", "B", "X", "W"],
+      "moves": 20,
+      "target": 120
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P"],
+      "moves": 10,
+      "target": 40
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P"],
+      "moves": 7,
+      "target": 40
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W"],
+      "moves": 20,
+      "target": 20
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W"],
+      "moves": 20,
+      "target": 40
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W"],
+      "moves": 20,
+      "target": 60
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W"],
+      "moves": 20,
+      "target": 80
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W"],
+      "moves": 10,
+      "target": 30
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W"],
+      "moves": 7,
+      "target": 30
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W", "X"],
+      "moves": 20,
+      "target": 20
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W", "X"],
+      "moves": 20,
+      "target": 40
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W", "X"],
+      "moves": 20,
+      "target": 60
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W", "X"],
+      "moves": 20,
+      "target": 80
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W", "X"],
+      "moves": 20,
+      "target": 100
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W", "X"],
+      "moves": 20,
+      "target": 120
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W", "X"],
+      "moves": 10,
+      "target": 20
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W", "X"],
+      "moves": 7,
+      "target": 20
+    },
+    {
+      "colors": ["Y", "R", "G", "B", "P", "W", "X"],
+      "moves": 30,
+      "target": 200
+    }
+  ]
+}
