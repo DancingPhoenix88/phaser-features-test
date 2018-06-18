@@ -11,6 +11,7 @@ The game is inspired by [DOTS](https://www.dots.co/).
 Game rule is simple: Connect dots with same color to make them disappear.
 If you can form a square (or a rectangle), all dots with that color will disappear.
 ![Video](https://youtu.be/iZ3snVsQahc)
+[https://youtu.be/iZ3snVsQahc](https://youtu.be/iZ3snVsQahc)
 
 ## Version 1
 + [**Phaser Editor**](https://phasereditor2d.com/):
