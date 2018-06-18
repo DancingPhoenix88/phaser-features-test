@@ -133,7 +133,7 @@ If you can form a square (or a rectangle), all dots with that color will disappe
   + So everytime I want to "restart" the tween, I can just call `tween.resume`.
 + **Background music**
   + Background music is played everytime we enters Menu state
-  + So when we go back ad forth between Menu and Battle states, the music is played by another source -> multiple sounds can be heard at the same time
+  + So when we go back and forth between Menu and Battle states, the music is played by another source -> multiple sounds can be heard at the same time
   + FIX: Add `data` property in global variable `game` to control this.
 + **Add PhoneGap folder**
   + Create a blank PhoneGap project
@@ -175,7 +175,7 @@ If you can form a square (or a rectangle), all dots with that color will disappe
 + **Cordova plugin**
   + Use [Cordova Plugin Screen Orientation](https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-screen-orientation/index.html) to lock orientation mode = Portrait, which is available in Phaser but doesn't work.
 + **UI**
-  + Use interval UI editor of Phaser Editor. Nothing worth mentioning.
+  + Use internal UI editor of Phaser Editor. Nothing worth mentioning.
 + **Spice things up**
   + Update game logic to make "levels"
   + Add more colors
