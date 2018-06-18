@@ -18,6 +18,7 @@ var pConfig = {
  */
 window.onload = function() {
     game = new Phaser.Game( pConfig );
+    screen.orientation.lock( 'landscape' ); // lock orientation using 'cordova-plugin-screen-orientation'
 
     // states
     game.state.add( 'Boot',    Boot    );
