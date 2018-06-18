@@ -265,6 +265,8 @@ Battle.prototype.initStage = function () {
     this.currentLevelSettings   = this.game.data.level.getLevel( this.game.data.userLevel );
     this.colorsInLevel          = this.currentLevelSettings.colors;
     this.requiredColor          = Phaser.ArrayUtils.getRandomItem( this.colorsInLevel );
+    this.countMoves             = 0;
+    this.countClear             = 0;
     console.log( 'LEVEL ' + this.game.data.userLevel, this.currentLevelSettings );
     console.log( '%c Required color = ' + this.requiredColor, 'background: #' + this.COLORS[ this.requiredColor - 1 ].toString(16) + '; color: #000' );
     this.initUI();
