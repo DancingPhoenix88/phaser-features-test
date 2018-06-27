@@ -20,7 +20,7 @@
     ],
     "showGrid": true,
     "create_before": "//--Generated config (from canvas user code)\nthis.state.start( 'Preload' );",
-    "state_init_before": "//--Generated config (from canvas user code)\n// Support full-screen\nthis.input.maxPointers \t\t\t\t= 1;\nthis.stage.disableVisibilityChange \t= true;\nthis.scale.pageAlignHorizontally \t= true;\nthis.scale.pageAlignVertically \t\t= true;\n//this.scale.scaleMode \t\t\t\t= Phaser.ScaleManager.SHOW_ALL;"
+    "state_init_before": "//--Generated config (from canvas user code)\n// Support full-screen\nthis.input.maxPointers \t\t\t\t= 1;\nthis.stage.disableVisibilityChange \t= true;\nthis.scale.pageAlignHorizontally \t= true;\nthis.scale.pageAlignVertically \t\t= true;\n//this.scale.scaleMode \t\t\t\t= Phaser.ScaleManager.SHOW_ALL;\nif (!this.game.device.desktop) {\n    screen.orientation.lock( 'landscape' ); // lock orientation using 'cordova-plugin-screen-orientation'\n}"
   },
   "stateSettings": {
     "stageBackgroundColor": [
