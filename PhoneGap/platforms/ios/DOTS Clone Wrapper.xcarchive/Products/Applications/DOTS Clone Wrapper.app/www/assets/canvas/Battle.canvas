@@ -1,0 +1,450 @@
+{
+  "canvas-version": 2,
+  "settings": {
+    "className": "Battle",
+    "sceneWidth": 450,
+    "sceneHeight": 800,
+    "generateOnSave": true,
+    "enableStepping": false,
+    "lang": "JAVA_SCRIPT",
+    "baseClass": "Phaser.State",
+    "backgroundColor": [
+      180,
+      180,
+      180
+    ],
+    "gridColor": [
+      200,
+      200,
+      200
+    ],
+    "showGrid": true,
+    "create_after": "\n//--Generated code from canvas user code\nthis.makeBitmapTextFrom( _btnBackText, 'NUnito', true );\nthis.initStage();",
+    "state_preload_after": "//--Generated custom load (from user canvas code)\nthis.load.customPack( 'custom_pack', 'customBattle' );"
+  },
+  "stateSettings": {
+    "stageBackgroundColor": [
+      0,
+      0,
+      0
+    ],
+    "autoLoad": false,
+    "preloadSpriteId": "",
+    "preloadSprite_direction": 0,
+    "load.pack": []
+  },
+  "world": {
+    "type": "group",
+    "id": "9ab9ecfe-3f31-4017-a73d-3cbbd3ebeebb",
+    "info": {
+      "editorName": "Battle",
+      "setAll": [],
+      "children": [
+        {
+          "type": "image",
+          "id": "819956de-67f8-410e-9caf-9264820f0dbf",
+          "asset": "0",
+          "info": {
+            "editorName": "bg",
+            "name": "bg"
+          }
+        },
+        {
+          "type": "atlas-sprite",
+          "id": "36f0be39-261f-43a0-aae7-9f85afebf6d2",
+          "asset": "1",
+          "info": {
+            "editorName": "stage",
+            "editorPublic": true,
+            "name": "stage",
+            "x": 69,
+            "y": 244,
+            "alpha": 0.8
+          }
+        },
+        {
+          "type": "group",
+          "id": "f21b2e07-f07d-4106-88f5-010402676af4",
+          "info": {
+            "editorName": "linesGroup",
+            "editorPublic": true,
+            "name": "linesGroup",
+            "x": 79,
+            "y": 254,
+            "setAll": [],
+            "children": []
+          }
+        },
+        {
+          "type": "group",
+          "id": "567b7ced-76bd-4172-9ac1-afe382fc301f",
+          "info": {
+            "editorName": "dotsGroup",
+            "editorPublic": true,
+            "name": "dotsGroup",
+            "x": 79,
+            "y": 254,
+            "setAll": [],
+            "children": []
+          }
+        },
+        {
+          "type": "group",
+          "id": "895745a1-b0fb-448c-b320-4cbe1ff3b8e4",
+          "info": {
+            "editorName": "particlesGroup",
+            "editorPublic": true,
+            "name": "particlesGroup",
+            "x": 79,
+            "y": 254,
+            "setAll": [],
+            "children": []
+          }
+        },
+        {
+          "type": "group",
+          "id": "e02d56f8-9334-4d2a-a70a-8c614d8c096e",
+          "info": {
+            "editorName": "uiGroup",
+            "editorPublic": true,
+            "name": "UI",
+            "fixedToCamera": true,
+            "setAll": [],
+            "children": [
+              {
+                "type": "group",
+                "id": "4b35f6ed-d316-4d1d-b63c-4da7d5e76b8d",
+                "info": {
+                  "editorName": "panelGoal",
+                  "name": "panelGoal",
+                  "x": 163,
+                  "y": 14,
+                  "editorClosed": true,
+                  "setAll": [],
+                  "children": [
+                    {
+                      "type": "atlas-sprite",
+                      "id": "7ef11a4a-1832-43f5-bedf-75b2400163da",
+                      "asset": "2",
+                      "info": {
+                        "editorName": "bgGoal",
+                        "name": "bgGoal",
+                        "scale.x": 1.55,
+                        "scale.y": 5,
+                        "alpha": 0.4
+                      }
+                    },
+                    {
+                      "type": "atlas-sprite",
+                      "id": "821c4b72-731e-46cd-9acf-e1bff8969cc0",
+                      "asset": "3",
+                      "info": {
+                        "editorName": "imgDotGoal",
+                        "editorPublic": true,
+                        "name": "imgDotGoal",
+                        "x": 8,
+                        "y": 10
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "dec10dd2-853d-4a56-8fcb-a16c41704fbc",
+                      "info": {
+                        "editorName": "txtGoal",
+                        "editorPublic": true,
+                        "name": "txtGoal",
+                        "x": 45,
+                        "y": 12,
+                        "text": "99",
+                        "style.fontSize": 24,
+                        "style.fill": "#ffffff",
+                        "style.align": "CENTER"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "group",
+                "id": "fbecfaec-7763-43b6-9a4b-3ed2e330a4a2",
+                "info": {
+                  "editorName": "panelMove",
+                  "name": "btnBack",
+                  "x": 23,
+                  "y": 14,
+                  "editorClosed": true,
+                  "setAll": [],
+                  "children": [
+                    {
+                      "type": "atlas-sprite",
+                      "id": "472f4681-9262-4662-9a4b-4edf0da070be",
+                      "asset": "2",
+                      "info": {
+                        "editorName": "bgMove",
+                        "name": "bgMove",
+                        "scale.x": 2.5,
+                        "scale.y": 5,
+                        "alpha": 0.8
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "cc332c31-b62f-480c-81af-12cd6a10ab36",
+                      "info": {
+                        "editorName": "labelMove",
+                        "name": "labelMove",
+                        "x": 9,
+                        "y": 15,
+                        "text": "MOVES",
+                        "style.fontSize": 16,
+                        "style.fontWeight": "NORMAL",
+                        "style.fill": "#666666",
+                        "style.align": "CENTER"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "098e51cc-eb7b-4903-9ca0-85eda886ac09",
+                      "info": {
+                        "editorName": "txtMove",
+                        "editorPublic": true,
+                        "name": "txtMove",
+                        "x": 79,
+                        "y": 5,
+                        "text": "99",
+                        "style.fontSize": 32,
+                        "style.fill": "#333333",
+                        "style.align": "CENTER"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "group",
+                "id": "4fcecedf-3256-44d4-b45f-7c9d6761ac5f",
+                "info": {
+                  "editorName": "btnBack",
+                  "name": "btnBack",
+                  "x": -17,
+                  "y": 9,
+                  "editorClosed": true,
+                  "setAll": [],
+                  "children": [
+                    {
+                      "type": "button",
+                      "id": "2f00a26f-b38d-4382-8a50-4674100dcdd4",
+                      "asset": "2",
+                      "info": {
+                        "editorName": "btnBackBg",
+                        "name": "btnBackBg",
+                        "x": 360,
+                        "y": 8,
+                        "scale.x": 1.7,
+                        "scale.y": 4,
+                        "alpha": 0.9,
+                        "callback": "this.toMenuState"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "8e796e35-6870-4018-97fe-681725239a88",
+                      "info": {
+                        "editorName": "btnBackText",
+                        "name": "btnBackText",
+                        "x": 376,
+                        "y": 16,
+                        "text": "BACK",
+                        "style.fill": "#9e627c",
+                        "style.align": "CENTER"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "button",
+                "id": "f1a6da2a-faab-45d6-b4c9-7c09691acfd2",
+                "asset": "2",
+                "info": {
+                  "editorName": "modalBg",
+                  "editorPublic": true,
+                  "name": "modalBg",
+                  "x": -35,
+                  "y": -25,
+                  "scale.x": 10,
+                  "scale.y": 85,
+                  "alpha": 0.8,
+                  "renderable": false,
+                  "tint": "0x191919"
+                }
+              },
+              {
+                "type": "group",
+                "id": "09308b48-63a4-40d5-b77a-e381892815ef",
+                "info": {
+                  "editorName": "modalWin",
+                  "editorPublic": true,
+                  "name": "modalWin",
+                  "x": 69.00001525878906,
+                  "y": 300,
+                  "editorClosed": true,
+                  "setAll": [{
+                    "key": "visible",
+                    "value": "false"
+                  }],
+                  "children": [
+                    {
+                      "type": "atlas-sprite",
+                      "id": "894155c6-d45b-4d0d-b3b9-d7a9bddd575a",
+                      "asset": "2",
+                      "info": {
+                        "editorName": "bgWin",
+                        "name": "bgWin",
+                        "scale.x": 6,
+                        "scale.y": 20,
+                        "alpha": 0.8
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "b8077484-2a8e-44d6-aa6e-c5dfac839c2f",
+                      "info": {
+                        "editorName": "labelWin",
+                        "name": "labelWin",
+                        "x": 79,
+                        "y": 29,
+                        "text": "Mission Complete",
+                        "style.fontWeight": "NORMAL",
+                        "style.fill": "#008000",
+                        "style.align": "CENTER"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "6ae8443d-a664-4e0d-89db-5fe2e1e71a18",
+                      "info": {
+                        "editorName": "txtLvWin",
+                        "editorPublic": true,
+                        "name": "txtLvWin",
+                        "x": 124,
+                        "y": 74,
+                        "text": "99",
+                        "style.fontSize": 64,
+                        "style.fill": "#408000",
+                        "style.align": "CENTER"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "group",
+                "id": "ddcebad6-bb08-4055-96b9-13a7e97723f1",
+                "info": {
+                  "editorName": "modalLose",
+                  "editorPublic": true,
+                  "name": "modalLose",
+                  "x": 69,
+                  "y": 300,
+                  "editorClosed": true,
+                  "setAll": [{
+                    "key": "visible",
+                    "value": "false"
+                  }],
+                  "children": [
+                    {
+                      "type": "atlas-sprite",
+                      "id": "1930a993-7439-41b8-88e6-f5a316699d9c",
+                      "asset": "2",
+                      "info": {
+                        "editorName": "bgLose",
+                        "name": "bgLose",
+                        "scale.x": 6,
+                        "scale.y": 20,
+                        "alpha": 0.8
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "45f84037-97f2-4dd4-9b19-51e2deaebcdb",
+                      "info": {
+                        "editorName": "labelLose",
+                        "name": "labelLose",
+                        "x": 99,
+                        "y": 29,
+                        "text": "Mission Failed",
+                        "style.fontWeight": "NORMAL",
+                        "style.fill": "#800040",
+                        "style.align": "CENTER"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "cc1d24c7-8a0a-4563-9ca7-8682db384000",
+                      "info": {
+                        "editorName": "txtLvLose",
+                        "editorPublic": true,
+                        "name": "txtLvLose",
+                        "x": 124,
+                        "y": 74,
+                        "text": "99",
+                        "style.fontSize": 64,
+                        "style.fill": "#800040",
+                        "style.align": "CENTER"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "atlas-sprite",
+          "id": "98cb1fd9-fb90-45ff-bda0-a1ef3c92d6e5",
+          "asset": "3",
+          "info": {
+            "editorName": "squareIndicator",
+            "editorPublic": true,
+            "name": "squareIndicator",
+            "x": 210,
+            "y": 385,
+            "scale.x": 40,
+            "scale.y": 40,
+            "alpha": 0.2,
+            "anchor.x": 0.5,
+            "anchor.y": 0.5
+          }
+        }
+      ]
+    }
+  },
+  "type": "STATE",
+  "asset-table": {
+    "0": {
+      "file": "WebContent/assets/pack.json",
+      "section": "battle",
+      "asset": "bg"
+    },
+    "1": {
+      "file": "WebContent/assets/pack.json",
+      "section": "battle",
+      "asset": "all-images",
+      "sprite": "stage"
+    },
+    "2": {
+      "file": "WebContent/assets/pack.json",
+      "section": "battle",
+      "asset": "all-images",
+      "sprite": "line"
+    },
+    "3": {
+      "file": "WebContent/assets/pack.json",
+      "section": "battle",
+      "asset": "all-images",
+      "sprite": "dot"
+    }
+  },
+  "prefab-table": {}
+}

@@ -1,0 +1,10 @@
+{
+  "ios": {
+    "debug": {
+      "developmentTeam": "Q75BFM5EYD"
+    },
+    "release": {
+      "developmentTeam": "Q75BFM5EYD"
+    }
+  }
+}

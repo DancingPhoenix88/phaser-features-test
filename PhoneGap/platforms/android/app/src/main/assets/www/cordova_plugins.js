@@ -28,7 +28,8 @@ module.exports.metadata =
 {
   "cordova-plugin-device": "2.0.2",
   "es6-promise-plugin": "4.2.2",
-  "cordova-plugin-screen-orientation": "3.0.1"
+  "cordova-plugin-screen-orientation": "3.0.1",
+  "it.innowatio.cordova.ios-fullscreen": "0.3.0"
 };
 // BOTTOM OF METADATA
 });

@@ -22,5 +22,13 @@
     },
     "is_top_level": false,
     "variables": {}
+  },
+  "it.innowatio.cordova.ios-fullscreen": {
+    "source": {
+      "type": "registry",
+      "id": "https://github.com/innowatio/cordova-ios-fullscreen.git"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }

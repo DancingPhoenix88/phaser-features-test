@@ -9,11 +9,13 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
-    <preference name="Orientation" value="portrait" />
+    <preference name="orientation" value="portrait" />
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <platform name="android">
         <preference name="Fullscreen" value="true" />
     </platform>
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
+    <plugin name="it.innowatio.cordova.ios-fullscreen" spec="https://github.com/innowatio/cordova-ios-fullscreen.git" />
     <engine name="android" spec="7.0.0" />
+    <engine name="ios" spec="^4.5.4" />
 </widget>
