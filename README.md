@@ -6,14 +6,17 @@ Then the popularity of Phaser has my attention, and especially PixiJS, Qici and 
 This project is used to test Phaser features so that I can understand how efficiently it works.
 
 Final report was presented here: [Slideshare - Introduce phaser](https://www.slideshare.net/chipchipknight/introduce-phaser)
+[![First slide](https://image.slidesharecdn.com/introducephaser-200918071251/95/introduce-phaser-1-638.jpg?cb=1600413437)]((https://www.slideshare.net/chipchipknight/introduce-phaser))
 
 ## Description
 The game is inspired by [DOTS](https://www.dots.co/).
 
+[![DOTS poster](https://www.dots.co/assets/images/device.png)](https://www.dots.co/)
+
 Game rule is simple: Connect dots with same color to make them disappear.
 If you can form a square (or a rectangle), all dots with that color will disappear.
-![Video](https://youtu.be/iZ3snVsQahc)
-[https://youtu.be/iZ3snVsQahc](https://youtu.be/iZ3snVsQahc)
+
+[![Gameplay video poster](https://i9.ytimg.com/vi/iZ3snVsQahc/mq1.jpg?sqp=CKC_kfsF&rs=AOn4CLCdw9JS6Yjefz1elo0sfNqcNN-76Q)](https://youtu.be/iZ3snVsQahc)
 
 
 ## Version 1
