@@ -4,7 +4,8 @@ I was checking several HTML5 game engines / frameworks and I kinda love CreateJS
 Then the popularity of Phaser has my attention, and especially PixiJS, Qici and PhaserEditor.
 
 This project is used to test Phaser features so that I can understand how efficiently it works.
-Final report was presented here: https://www.slideshare.net/chipchipknight/introduce-phaser
+
+Final report was presented here: [Slideshare - Introduce phaser](https://www.slideshare.net/chipchipknight/introduce-phaser)
 
 ## Description
 The game is inspired by [DOTS](https://www.dots.co/).
@@ -77,19 +78,19 @@ If you can form a square (or a rectangle), all dots with that color will disappe
   + _After this step_: Dot disappears with style.
 + **Others**
   + To test the game on my phone, I use these tools:
-    + PhoneGap desktop app (http://docs.phonegap.com/getting-started/1-install-phonegap/desktop/) is used to host a server on computer.
-    + PhoneGap developer app (https://play.google.com/store/apps/details?id=com.adobe.phonegap.app&hl=vi) is used to load the game into a WebView, directly from your computer without compiling to .apk.
+    + [PhoneGap desktop app](http://docs.phonegap.com/getting-started/1-install-phonegap/desktop/) is used to host a server on computer.
+    + [PhoneGap developer app](https://play.google.com/store/apps/details?id=com.adobe.phonegap.app&hl=vi) is used to load the game into a WebView, directly from your computer without compiling to .apk.
   + When I solved all the problems with NPM, Cordova, I can build and run the game on my phone by using 2 simple commands:
     + `cordova build android`
     + `cordova run android`
   + To emphasize connection between dots, I add white line sprites in a group under dots (fixed position as usual), then tint and show them later.
   + Add some debug plugins:
     + [Advanced Timing](https://github.com/samme/phaser-plugin-advanced-timing) to show FPS on screen
-    + [Scene Graph] (https://github.com/samme/phaser-plugin-scene-graph) to show scene graph in console
-    + [View Cache] (https://github.com/samme/phaser-view-cache) to show cache content in console
-    + [Step] (https://github.com/samme/phaser-plugin-step) to pause the game and move frame by frame using keyboard shortcut
-    + [Advanced Debug] (https://github.com/orange-games/phaser-advanced-debug) to show performance and WebGL draw calls
-    + [Inspector] (https://github.com/netcell/phaser-inspector) to show scene graph in DOM (heavy) -> need a way to disable plugin quickly (next)
+    + [Scene Graph](https://github.com/samme/phaser-plugin-scene-graph) to show scene graph in console
+    + [View Cache](https://github.com/samme/phaser-view-cache) to show cache content in console
+    + [Step](https://github.com/samme/phaser-plugin-step) to pause the game and move frame by frame using keyboard shortcut
+    + [Advanced Debug](https://github.com/orange-games/phaser-advanced-debug) to show performance and WebGL draw calls
+    + [Inspector](https://github.com/netcell/phaser-inspector) to show scene graph in DOM (heavy) -> need a way to disable plugin quickly (next)
   + I add a function `addOptionalPlugin` to add plugin safely when it can be null. By this way, you can just comment out <script> tag of that plugins in index.html to disable that plugin.
   + **Atlas**: Invidual sprites are moved to Design folder, which is excluded from final build. Sprites are packed by Phaser Editor to generate a sprite atlas -> less request, less memory, less batches. Awesome!
 
@@ -109,7 +110,7 @@ If you can form a square (or a rectangle), all dots with that color will disappe
   + Use `RecyclePool` to recycle objects like dots.
   + Refactor all collections in `Battle.js`
   + Try to re-use tweens but failed.
-  + Add game config in Main.js. Important changes:
+  + Add game config in `Main.js`. Important changes:
     + Switch renderer to AUTO for better performance on Android
     + Disable debug for better performance. Though my game is stable with 60 FPS from the beginning, I still leave this option here for later reference.
   + Found out plugin parameters are ignored by Phaser, so I need to get plugin to set parameters later -> `getPlugin` function is born.
