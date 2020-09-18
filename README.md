@@ -4,6 +4,7 @@ I was checking several HTML5 game engines / frameworks and I kinda love CreateJS
 Then the popularity of Phaser has my attention, and especially PixiJS, Qici and PhaserEditor.
 
 This project is used to test Phaser features so that I can understand how efficiently it works.
+Final report was presented here: https://www.slideshare.net/chipchipknight/introduce-phaser
 
 ## Description
 The game is inspired by [DOTS](https://www.dots.co/).
@@ -45,7 +46,6 @@ If you can form a square (or a rectangle), all dots with that color will disappe
   + Additionally, I use game.debug.spriteBounds to show which dot is under the cursor.
   + _After this step_: I can touch dots to highlight them.
 + **Tween**
-  + `Logic of connecting dots is being code ... DONE`
   + I use a self-made object pool to re-use dots.
   + Now that's the time to make dots move.
   + Tween feature of Phaser is very similar to may other tween engine, and I have no difficulty in this part.
