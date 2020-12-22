@@ -21,6 +21,7 @@ If you can form a square (or a rectangle), all dots with that color will disappe
 
 ## Version 1
 + [**Phaser Editor**](https://phasereditor2d.com/):
+  + I used Phaser Editor 1.5.4 to support Phaser 2.6.2
   + It has an internal server, so that I can just create a new project and run it.
   + It can generate new project with many templates useful for learning Phaser.
   + It has an internal doc that you can search and view runnable examples immediately -> big plus.
