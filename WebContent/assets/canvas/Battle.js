@@ -216,7 +216,6 @@ Battle.prototype.isSquareFormed         = false;
 Battle.prototype.avatar                 = null;
 Battle.prototype.isGrabbing             = false;
 Battle.prototype.liveLine               = null;
-Battle.prototype.mapOfSfxs              = [];
 Battle.prototype.cachedStageX           = 0;
 Battle.prototype.cachedStageY           = 0;
 Battle.prototype.cachedGroupX           = 0;
@@ -702,11 +701,11 @@ Battle.prototype.matchDots = function () {
         console.log( "Clear ALL dots type " + this.connectingType );
         this.clear( this.getDotsWhichIs( this.connectingType ) );
         this.camera.shake( 0.01, this.DOT_ANIM_DURATION ); // UI is fixed with camera
-        this.sfx( 'clear' );
+        AudioManager.Singleton.play( 'clear' );
     } else {
         console.log( "Clear matched dots type " + this.connectingType );
         this.clear( this.listOfConnectedDots );
-        this.sfx( 'match' );
+        AudioManager.Singleton.play( 'match' );
     }
     this.animateAvatarOnMatch( this.isSquareFormed );
 
@@ -810,7 +809,7 @@ Battle.prototype.onConnectNewDot = function (newDotIndex, lastDotIndex) {
                 .to( { x : 1.2, y : 1.2 }, this.DOT_ANIM_DURATION, Phaser.Easing.Bounce.Out, true );
         }
     }
-    this.sfx( 'connect' );
+    AudioManager.Singleton.play( 'connect' );
 
     // show connection
     if (lastDotIndex != undefined) {
@@ -851,7 +850,7 @@ Battle.prototype.onDisconnectDot = function (dotIndex, lastDotIndex) {
                 .to( { x : 1, y : 1 }, this.DOT_ANIM_DURATION, Phaser.Easing.Cubic.Out, true );
         }
     }
-    this.sfx( 'disconnect' );
+    AudioManager.Singleton.play( 'disconnect' );
 
     // hide connection
     if (lastDotIndex != undefined) {
@@ -1011,37 +1010,13 @@ Battle.prototype.animateAvatarOnMatch = function (clearAll) {
  * [AUDIO] Spawn audio instances
  */
 Battle.prototype.initAudio = function () {
-    this.loadSfx( 'clear', 0.4 );
-    this.loadSfx( 'connect', 0.5 );
-    this.loadSfx( 'disconnect' );
-    this.loadSfx( 'match' );
+	AudioManager.Singleton.load( this, 'clear', 0.4 );
+	AudioManager.Singleton.load( this, 'connect', 0.5 );
+	AudioManager.Singleton.load( this, 'disconnect' );
+	AudioManager.Singleton.load( this, 'match' );
 };
 //-----------------------------------------------------------------------------------------------------------
-/**
- * [AUDIO] Load & cache SFX
- * @param key : SFX key
- * @param volume (optional) : SFX volume
- */
-Battle.prototype.loadSfx = function (key, volume) {
-    if (isNaN(volume)) {
-        this.mapOfSfxs[ key ] = this.add.sound( 'sfx-' + key );
-    } else {
-        this.mapOfSfxs[ key ] = this.add.sound( 'sfx-' + key, volume );
-    }
-};
-//-----------------------------------------------------------------------------------------------------------
-/**
- * [AUDIO] Play SFX
- * @param key : SFX key
- */
-Battle.prototype.sfx = function (key) {
-    /** @type Phaser.Sound */var s = this.mapOfSfxs[ key ];
-    if (s != undefined) {
-        s.play();
-    } else {
-        console.error( 'sfx "' + key + '" not found' );
-    }
-};
+
 //-----------------------------------------------------------------------------------------------------------
 /**
  * [TWEEN] Init pool of tweens to recycle later

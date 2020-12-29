@@ -20,7 +20,7 @@
     ],
     "showGrid": true,
     "create_before": "//--Generated state transition (from canvas user code)\nthis.loadCustomPacks();",
-    "state_preload_before": "//--Generated config (from canvas user code)\n// Load plugins\naddOptionalPlugin( Phaser.Plugin.EPSY );\naddOptionalPlugin( PhaserSpine.SpinePlugin );\naddOptionalPlugin( Phaser.Plugin.AdvancedTiming );\naddOptionalPlugin( Phaser.Plugin.SceneGraph );\n\nif (this.game.device.desktop) {\n    addOptionalPlugin( Phaser.Plugin.Step );\n    addOptionalPlugin( Phaser.Plugin.Debug );\n    addOptionalPlugin( Phaser.Plugin.Inspector );\n}"
+    "state_preload_before": "//--Generated config (from canvas user code)\n// Load plugins\naddOptionalPlugin( Phaser.Plugin.EPSY );\naddOptionalPlugin( PhaserSpine.SpinePlugin );\naddOptionalPlugin( Phaser.Plugin.AdvancedTiming );\naddOptionalPlugin( Phaser.Plugin.SceneGraph );\n\nif (this.game.device.desktop) {\n\tif (!pConfig.enableDebug) console.warn( 'DEBUG is disabled' );\n\telse {\n\t    addOptionalPlugin( Phaser.Plugin.Step );\n    \taddOptionalPlugin( Phaser.Plugin.Debug );\n\t    addOptionalPlugin( Phaser.Plugin.Inspector );\n\t}\n}"
   },
   "stateSettings": {
     "stageBackgroundColor": [
