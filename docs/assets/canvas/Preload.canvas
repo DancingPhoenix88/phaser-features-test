@@ -1,0 +1,86 @@
+{
+  "canvas-version": 2,
+  "settings": {
+    "className": "Preload",
+    "sceneWidth": 450,
+    "sceneHeight": 800,
+    "generateOnSave": true,
+    "enableStepping": false,
+    "lang": "JAVA_SCRIPT",
+    "baseClass": "Phaser.State",
+    "backgroundColor": [
+      180,
+      180,
+      180
+    ],
+    "gridColor": [
+      200,
+      200,
+      200
+    ],
+    "showGrid": true,
+    "create_before": "//--Generated state transition (from canvas user code)\nthis.loadCustomPacks();",
+    "state_preload_before": "//--Generated config (from canvas user code)\n// Load plugins\naddOptionalPlugin( Phaser.Plugin.EPSY );\naddOptionalPlugin( PhaserSpine.SpinePlugin );\naddOptionalPlugin( Phaser.Plugin.AdvancedTiming );\naddOptionalPlugin( Phaser.Plugin.SceneGraph );\n\nif (this.game.device.desktop) {\n\tif (!pConfig.enableDebug) console.warn( 'DEBUG is disabled' );\n\telse {\n\t    addOptionalPlugin( Phaser.Plugin.Step );\n    \taddOptionalPlugin( Phaser.Plugin.Debug );\n\t    addOptionalPlugin( Phaser.Plugin.Inspector );\n\t}\n}"
+  },
+  "stateSettings": {
+    "stageBackgroundColor": [
+      0,
+      0,
+      0
+    ],
+    "autoLoad": false,
+    "isPreloader": true,
+    "preloadSpriteId": "46668a7d-0273-4332-86e2-acc1da7c23d1",
+    "preloadSprite_direction": 0,
+    "load.pack": [{
+      "file": "WebContent/assets/pack.json",
+      "section": "battle"
+    }]
+  },
+  "world": {
+    "type": "group",
+    "id": "d69f1dfb-2845-4bf9-b0bc-9d924863d13b",
+    "info": {
+      "editorName": "Preload",
+      "setAll": [],
+      "children": [
+        {
+          "type": "image",
+          "id": "46668a7d-0273-4332-86e2-acc1da7c23d1",
+          "asset": "0",
+          "info": {
+            "editorName": "progress_bar",
+            "name": "progress_bar",
+            "x": 100,
+            "y": 405,
+            "scale.x": 5,
+            "pivot.y": 5,
+            "anchor.y": 0.5,
+            "tint": "0x66ccff"
+          }
+        },
+        {
+          "type": "text",
+          "id": "99d23346-15ae-4d8c-9bef-35702392a12e",
+          "info": {
+            "editorName": "txtLoading",
+            "name": "txtLoading",
+            "x": 100,
+            "y": 370,
+            "text": "Loading ...",
+            "style.fontSize": 16,
+            "style.fontWeight": "NORMAL",
+            "style.fill": "#ffffff"
+          }
+        }
+      ]
+    }
+  },
+  "type": "STATE",
+  "asset-table": {"0": {
+    "file": "WebContent/assets/pack.json",
+    "section": "preload",
+    "asset": "progress-bar"
+  }},
+  "prefab-table": {}
+}
