@@ -1,4 +1,0 @@
-#Mon Jun 18 19:03:04 ICT 2018
-base.0=/Users/hoang.vu/Downloads/Workspace/Phaser/phaser-features-test/PhoneGap/platforms/android/app/build/intermediates/transforms/dexMerger/debug/0
-renamed.0=classes.dex
-file.0=/Users/hoang.vu/Downloads/Workspace/Phaser/phaser-features-test/PhoneGap/platforms/android/app/build/intermediates/transforms/dexMerger/debug/0/classes.dex
